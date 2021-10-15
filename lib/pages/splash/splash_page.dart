@@ -24,14 +24,20 @@ class _SplashPageState extends State<SplashPage> {
   }
 
   _body() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          Center(child: Image.asset('assets/images/logo_name.png'),),
-          const CircularProgressIndicator(),
-        ],
-      )
+    return SafeArea(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        child: Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Center(child: Image.asset('assets/images/logo_name.png'),),
+              const CircularProgressIndicator(),
+            ],
+          ),
+        )
+      ),
     );
 
   }
