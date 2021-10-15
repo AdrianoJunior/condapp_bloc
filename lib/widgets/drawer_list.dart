@@ -1,9 +1,5 @@
-import 'package:cond_app/utils/alert.dart';
-import 'package:cond_app/utils/nav.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_vector_icons/flutter_vector_icons.dart';
-import 'package:package_info_plus/package_info_plus.dart';
+import 'package:cond_app/utils/exports.dart';
+
 
 class DrawerList extends StatelessWidget {
   UserAccountsDrawerHeader _header() {
@@ -53,7 +49,7 @@ class DrawerList extends StatelessWidget {
                   title: const Text("Despesas"),
                   onTap: () {
                     pop(context);
-                    Navigator.pushReplacementNamed(context, '/splash/');
+                    Navigator.pushReplacementNamed(context, '/');
                   },
                 ),
                 ListTile(
@@ -67,6 +63,7 @@ class DrawerList extends StatelessWidget {
                   title: const Text("Reuniões"),
                   onTap: () {
                     pop(context);
+                    Navigator.pushReplacementNamed(context, '/reunioes/');
                   },
                 ),
               ],
@@ -89,6 +86,7 @@ class DrawerList extends StatelessWidget {
                   title: const Text("Visitas"),
                   onTap: () {
                     pop(context);
+                    Navigator.pushReplacementNamed(context, '/visitas/');
                   },
                 ),
                 ListTile(
@@ -102,6 +100,7 @@ class DrawerList extends StatelessWidget {
                   title: const Text("Reservas"),
                   onTap: () {
                     pop(context);
+                    Navigator.pushReplacementNamed(context, '/reservas/');
                   },
                 ),
               ],
@@ -124,6 +123,7 @@ class DrawerList extends StatelessWidget {
                   ),
                   onTap: () {
                     pop(context);
+                    Navigator.pushReplacementNamed(context, '/perfil/');
                   },
                 ),
                 ListTile(
@@ -134,6 +134,7 @@ class DrawerList extends StatelessWidget {
                   ),
                   onTap: () {
                     pop(context);
+                    Navigator.pushReplacementNamed(context, '/recuperar/');
                   },
                 ),
                 ListTile(
@@ -145,9 +146,10 @@ class DrawerList extends StatelessWidget {
                     ),
                   ),
                   title: const Text("Logout"),
-                  onTap: () {
+                  onTap: () async {
                     pop(context);
-                    _onClickLogout();
+                    await _onClickLogout();
+                    Navigator.pushReplacementNamed(context, '/login/');
                   },
                 ),
               ],
