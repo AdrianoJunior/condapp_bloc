@@ -17,3 +17,13 @@ export 'package:firebase_auth/firebase_auth.dart';
 export 'package:flutter_vector_icons/flutter_vector_icons.dart';
 export 'package:package_info_plus/package_info_plus.dart';
 export 'package:cond_app/routes/routes.dart';
+export 'package:cond_app/widgets/header_container.dart';
+export 'package:cond_app/widgets/text_input.dart';
+export 'package:cond_app/widgets/button_widget.dart';
+export 'package:cond_app/shared/usuario.dart';
+export 'package:cloud_firestore/cloud_firestore.dart';
+
+export 'package:cond_app/firebase/firebase_service.dart';
+export 'simple_bloc.dart';
+export 'package:cond_app/pages/conta/login/login_bloc.dart';
+export 'package:firebase_core/firebase_core.dart';

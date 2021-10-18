@@ -1,3 +1,4 @@
+import 'package:cond_app/shared/usuario.dart';
 import 'package:cond_app/utils/exports.dart';
 
 class FirebaseService {
@@ -7,20 +8,15 @@ class FirebaseService {
     try {
       // Usuario do Firebase
       final authResult = await _auth.signInWithEmailAndPassword(
-          email: usuario.email, password: usuario.senha);
+          email: usuario.email!, password: usuario.senha!);
       final User? fUser = authResult.user;
       print("signed in ${authResult.user!.displayName}");
 
-      // Cria um usuario do app
-      final user = Usuario();
-      user.changeName(fUser!.displayName);
-
       // Resposta genérica
 
-      if (user != null) {
+      if (fUser != null) {
         return ApiResponse.ok(
-          result: fUser
-          /*result: true, msg: "Login efetuado com sucesso"*/);
+            result: fUser /*result: true, msg: "Login efetuado com sucesso"*/);
       } else {
         return ApiResponse.error(
             msg: "Não foi possível fazer o login, tente novamente!");
@@ -36,15 +32,13 @@ class FirebaseService {
     try {
       // Usuario do Firebase
       final authResult = await _auth.createUserWithEmailAndPassword(
-          email: usuario.email, password: usuario.senha);
+          email: usuario.email!, password: usuario.senha!);
       final User? fUser = authResult.user;
       print("created user ${authResult.user!.displayName}");
 
-      fUser!.updateDisplayName(usuario.name);
+      fUser!.updateDisplayName(usuario.nome);
 
       final user = Usuario();
-      user.changeName(fUser.displayName);
-      user.changeEmail(fUser.email!);
       if (fUser != null) {
         return ApiResponse.ok(result: user);
       } else {

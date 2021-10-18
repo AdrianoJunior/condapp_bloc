@@ -1,0 +1,76 @@
+{
+  "project_info": {
+    "project_number": "820058794741",
+    "project_id": "condapp-4d828",
+    "storage_bucket": "condapp-4d828.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820058794741:android:db61afb66ae7418729b3bc",
+        "android_client_info": {
+          "package_name": "com.example.cond_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820058794741-bcco7tfhsq10ihfitc3njrjen705eots.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnL6WH4cWENXHJwES5QQJF4zoZ1Bi2fTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "820058794741-bcco7tfhsq10ihfitc3njrjen705eots.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:820058794741:android:88a50e903ac97e4329b3bc",
+        "android_client_info": {
+          "package_name": "com.example.condapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "820058794741-gsqsam2drm4legn8pijtr6ed5f5mm0dt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.condapp",
+            "certificate_hash": "9f304b33b2d581d055a33a87f7d158095a937ce2"
+          }
+        },
+        {
+          "client_id": "820058794741-bcco7tfhsq10ihfitc3njrjen705eots.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnL6WH4cWENXHJwES5QQJF4zoZ1Bi2fTM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "820058794741-bcco7tfhsq10ihfitc3njrjen705eots.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

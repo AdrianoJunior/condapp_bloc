@@ -8,37 +8,44 @@ class SplashPage extends StatefulWidget {
 }
 
 class _SplashPageState extends State<SplashPage> {
+  User? user;
 
   @override
   void initState() {
     super.initState();
-
-    Future.delayed(const Duration(seconds: 5)).then((value) => Navigator.pushReplacementNamed(context, '/'));
+    user = FirebaseAuth.instance.currentUser;
+    Future.delayed(const Duration(seconds: 5)).then((value) {
+      if (user != null) {
+        Navigator.pushReplacementNamed(context, '/');
+      } else {
+        Navigator.pushReplacementNamed(context, '/login/');
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          body: _body(),
-        );
+      body: _body(),
+    );
   }
 
   _body() {
     return SafeArea(
       child: Container(
-        padding: const EdgeInsets.all(16),
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Center(child: Image.asset('assets/images/logo_name.png'),),
-              const CircularProgressIndicator(),
-            ],
-          ),
-        )
-      ),
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Center(
+                  child: Image.asset('assets/images/logo_name.png'),
+                ),
+                const CircularProgressIndicator(),
+              ],
+            ),
+          )),
     );
-
   }
 }

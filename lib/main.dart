@@ -1,7 +1,9 @@
 import 'package:cond_app/utils/exports.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
-void main() {
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

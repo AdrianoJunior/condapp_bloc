@@ -182,7 +182,7 @@ class DrawerList extends StatelessWidget {
                   (PackageInfo packageInfo) {
                     String appName = packageInfo.appName;
                     String version = packageInfo.version;
-                    alert(context, "Aplicativo $appName\nVersão $version");
+                    alert(context, "Aplicativo CondApp\nVersão $version");
                   },
                 );
               },
