@@ -27,3 +27,8 @@ export 'package:cond_app/firebase/firebase_service.dart';
 export 'simple_bloc.dart';
 export 'package:cond_app/pages/conta/login/login_bloc.dart';
 export 'package:firebase_core/firebase_core.dart';
+
+export 'package:cached_network_image/cached_network_image.dart';
+export 'package:cond_app/pages/condominio/reunioes/reuniao.dart';
+export 'package:cond_app/pages/condominio/reunioes/reunioes_list_view.dart';
+export 'package:cond_app/pages/condominio/reunioes/reunioes_service.dart';

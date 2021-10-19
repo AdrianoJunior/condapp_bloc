@@ -109,7 +109,7 @@ class DrawerList extends StatelessWidget {
               leading: const Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Icon(
-                  Ionicons.md_person_circle_sharp,
+                  MaterialCommunityIcons.account_edit,
                   color: Colors.black,
                 ),
               ),
