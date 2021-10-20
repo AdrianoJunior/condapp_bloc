@@ -32,3 +32,9 @@ export 'package:cached_network_image/cached_network_image.dart';
 export 'package:cond_app/pages/condominio/reunioes/reuniao.dart';
 export 'package:cond_app/pages/condominio/reunioes/reunioes_list_view.dart';
 export 'package:cond_app/pages/condominio/reunioes/reunioes_service.dart';
+export 'package:flutter_speed_dial/flutter_speed_dial.dart';
+
+export 'package:cond_app/pages/agenda/visitas/visitantes/visitante.dart';
+export 'package:cond_app/pages/agenda/visitas/visitantes/visitantes_service.dart';
+
+export 'package:flutter_slidable/flutter_slidable.dart';
