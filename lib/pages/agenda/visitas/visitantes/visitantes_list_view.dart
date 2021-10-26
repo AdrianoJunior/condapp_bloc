@@ -38,7 +38,7 @@ class VisitantesListView extends StatelessWidget {
                 onTap: () {
                   alertCancel(
                     context,
-                    "Deseja excluir o visitante: ${v.nome}?"
+                    "Deseja excluir o cadastro do visitante: ${v.nome}?"
                     "\nA ação não pode ser desfeita",
                     callback: () {},
                   );
