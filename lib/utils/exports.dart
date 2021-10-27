@@ -30,6 +30,7 @@ export 'package:firebase_core/firebase_core.dart';
 
 export 'package:cached_network_image/cached_network_image.dart';
 export 'package:cond_app/pages/condominio/reunioes/reuniao.dart';
+export 'package:cond_app/pages/condominio/reunioes/reuniao_page.dart';
 export 'package:cond_app/pages/condominio/reunioes/reunioes_list_view.dart';
 export 'package:cond_app/pages/condominio/reunioes/reunioes_service.dart';
 export 'package:flutter_speed_dial/flutter_speed_dial.dart';
