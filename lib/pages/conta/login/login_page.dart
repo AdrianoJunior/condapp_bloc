@@ -41,7 +41,7 @@ class _LoginPageState extends State<LoginPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      TextInput(
+                      AppText(
                         hint: "Email",
                         icon: Icons.email,
                         controller: _tLogin,
@@ -50,7 +50,7 @@ class _LoginPageState extends State<LoginPage> {
                         nextFocus: _focusSenha,
                         inputAction: TextInputAction.next,
                       ),
-                      TextInput(
+                      AppText(
                         hint: "Senha",
                         icon: Icons.vpn_key,
                         controller: _tSenha,

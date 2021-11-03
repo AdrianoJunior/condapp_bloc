@@ -1,5 +1,8 @@
 import 'package:cond_app/shared/usuario.dart';
 import 'package:cond_app/utils/exports.dart';
+import 'package:path/path.dart' as path;
+import 'package:firebase_core/firebase_core.dart' as firebase_core;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 
 class FirebaseService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -61,4 +64,38 @@ class FirebaseService {
   Future<void> logout() async {
     await _auth.signOut();
   }
+
+
+  /*static Future<ApiResponse<String>> uploadFirebaseStorage(File file,
+      String uid) async {
+    try {
+      String fileName = path.basename(file.path);
+      final storageRef = FirebaseStorage.instance.ref().child('users').child(
+          uid).child(fileName);
+
+      final StorageTaskSnapshot task = await storageRef
+          .putFile(file)
+          .onComplete;
+      final String downloadUrl = await task.ref.getDownloadURL();
+
+      return ApiResponse.ok(result: downloadUrl);
+    } catch (e) {
+      print("UPLOAD ERROR >>>>>> $e");
+      return ApiResponse.error();
+    }
+  }*/
+
+  static Future<ApiResponse<bool>> saveUserData(Map<String, dynamic> mapUser,
+      String uid) async {
+    try {
+      final firestore = FirebaseFirestore.instance;
+      await firestore.collection('users').doc(uid).set(mapUser);
+      return ApiResponse.ok();
+    } catch (e) {
+      print("ERRO FIRESTORE SAVE >>>>> $e");
+
+      return ApiResponse.error();
+    }
+  }
+
 }

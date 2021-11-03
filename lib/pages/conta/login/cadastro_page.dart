@@ -52,7 +52,7 @@ class _CadastroPageState extends State<CadastroPage> {
                   child: Column(
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
-                      TextInput(
+                      AppText(
                         hint: "Nome",
                         icon: Icons.person,
                         inputAction: TextInputAction.next,
@@ -61,7 +61,7 @@ class _CadastroPageState extends State<CadastroPage> {
                         controller: _tNome,
                         nextFocus: _focusEmail,
                       ),
-                      TextInput(
+                      AppText(
                         hint: "E-mail",
                         icon: Icons.email,
                         inputAction: TextInputAction.next,
@@ -72,7 +72,7 @@ class _CadastroPageState extends State<CadastroPage> {
                         focusNode: _focusEmail,
                       ),
                       // _textInput(hint: "Phone Number", icon: Icons.call),
-                      TextInput(
+                      AppText(
                         hint: "Senha",
                         icon: Icons.vpn_key,
                         inputAction: TextInputAction.done,

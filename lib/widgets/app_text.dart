@@ -1,6 +1,6 @@
 import 'package:cond_app/utils/exports.dart';
 
-class TextInput extends StatelessWidget {
+class AppText extends StatelessWidget {
   TextEditingController? controller;
   String hint;
   IconData? icon;
@@ -11,7 +11,7 @@ class TextInput extends StatelessWidget {
   FocusNode? nextFocus;
   bool password;
 
-  TextInput({
+  AppText({
     this.controller,
     required this.hint,
     this.icon,

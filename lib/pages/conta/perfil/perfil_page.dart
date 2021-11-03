@@ -2,6 +2,17 @@ import 'dart:io';
 
 import 'package:cond_app/utils/exports.dart';
 
+import 'package:firebase_core/firebase_core.dart' as firebase_core;
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
+import 'dart:io' as io;
+import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
+
+import 'package:path/path.dart' as path;
+
+import 'package:cond_app/widgets/app_text.dart';
+
 class PerfilPage extends StatefulWidget {
   const PerfilPage({Key? key}) : super(key: key);
 
@@ -17,6 +28,8 @@ class _PerfilPageState extends State<PerfilPage> {
   String? urlFoto;
   User? user;
 
+  ImageSource imageSource = ImageSource.gallery;
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +38,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
     if (user != null) {
       _tName.text = user!.displayName ?? "";
+      print(">>>>>>> UID: ${user!.uid} <<<<<<<");
     }
   }
 
@@ -102,17 +116,17 @@ class _PerfilPageState extends State<PerfilPage> {
                 ),
               ),
               const SizedBox(height: 32),
-              TextInput(
+              AppText(
                 hint: "Nome",
                 icon: Ionicons.md_person_circle_outline,
               ),
               const SizedBox(height: 8),
-              TextInput(
+              AppText(
                 hint: "Endereço",
                 icon: MaterialCommunityIcons.google_maps,
               ),
               const SizedBox(height: 8),
-              TextInput(
+              AppText(
                 hint: "Nº da casa",
                 icon: Ionicons.home,
               ),
@@ -131,5 +145,78 @@ class _PerfilPageState extends State<PerfilPage> {
     );
   }
 
-  void _onClickFoto() {}
+  Future<void> _onClickFoto() async {
+    await showModalBottomSheet(
+      context: context,
+      builder: (context) => Wrap(
+        children: [
+          ListTile(
+            leading: const Icon(Icons.camera_alt),
+            title: const Text('Câmera'),
+            onTap: () {
+              Navigator.pop(context);
+              imageSource = ImageSource.camera;
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.photo_album),
+            title: const Text('Galeria'),
+            onTap: () {
+              Navigator.pop(context);
+              imageSource = ImageSource.gallery;
+            },
+          ),
+        ],
+      ),
+    );
+
+    ImagePicker imagePicker = ImagePicker();
+    XFile? pickedFile = await imagePicker.pickImage(source: imageSource);
+
+    if (pickedFile != null) {
+      File? file = await ImageCropper.cropImage(
+          sourcePath: pickedFile.path,
+          aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
+          androidUiSettings: const AndroidUiSettings(
+            toolbarTitle: "",
+          ));
+
+      if (file != null) {
+        setState(() {
+          this._file = file;
+        });
+        uploadFile(file);
+      }
+    }
+  }
+
+  /// The user selects a file, and the task is added to the list.
+  Future<String?> uploadFile(File? file) async {
+    if (file == null) {
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+        content: Text('Nenhum arquivo selecionado'),
+      ));
+      return null;
+    }
+
+    firebase_storage.UploadTask uploadTask;
+
+    // Create a Reference to the file
+    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+        .ref()
+        .child('users')
+        .child('/${user!.uid}/${user!.uid}');
+
+    final metadata = firebase_storage.SettableMetadata(
+        contentType: 'image/jpeg',
+        customMetadata: {'picked-file-path': file.path});
+
+    if (kIsWeb) {
+      uploadTask = ref.putData(await file.readAsBytes(), metadata);
+    } else {
+      uploadTask = ref.putFile(io.File(file.path), metadata);
+    }
+    print("DOWNLOAD URL >>>>> ${uploadTask.snapshot.ref.getDownloadURL()}");
+    return uploadTask.snapshot.ref.getDownloadURL();
+  }
 }
