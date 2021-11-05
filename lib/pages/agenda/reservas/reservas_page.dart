@@ -11,9 +11,10 @@ class _ReservasPageState extends State<ReservasPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Reservas"),),
+      appBar: AppBar(title: const Text("Reservas"),),
       body: _body(),
       drawer: DrawerList(),
+      floatingActionButton: FloatingActionButton(onPressed: (){}),
     );
   }
 

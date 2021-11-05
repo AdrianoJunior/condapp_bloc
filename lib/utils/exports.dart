@@ -42,3 +42,7 @@ export 'package:cond_app/pages/agenda/visitas/visitantes/visitante.dart';
 export 'package:cond_app/pages/agenda/visitas/visitantes/visitantes_service.dart';
 
 export 'package:flutter_slidable/flutter_slidable.dart';
+
+export 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
+
+export 'package:cond_app/pages/agenda/reservas/reserva.dart';

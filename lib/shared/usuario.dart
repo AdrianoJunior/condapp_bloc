@@ -5,38 +5,42 @@ import 'package:cond_app/utils/prefs.dart';
 
 class Usuario {
   String? nome;
-  String? id;
-  String? uid;
   String? email;
   String? senha;
+  String? id;
+  String? endereco;
+  String? numeroCasa;
+  String? telefone;
   Timestamp? dataNascimento;
 
   Usuario({
     this.nome,
     this.id,
+    this.endereco,
+    this.numeroCasa,
+    this.telefone,
+    this.dataNascimento,
     this.email,
     this.senha,
-    this.dataNascimento,
-    this.uid,
   });
 
   static Usuario fromMap(Map<String, dynamic> user) => Usuario(
-    nome: user['nome'],
-    id: user['id'],
-    email: user['email'],
-    senha: user['senha'],
-    dataNascimento: user['dataNascimento'],
-    uid: user['uid'],
-  );
+        nome: user['nome'],
+        id: user['id'],
+        endereco: user['endereco'],
+        numeroCasa: user['numeroCasa'],
+        telefone: user['telefone'],
+        dataNascimento: user['dataNascimento'],
+      );
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['nome'] = this.nome;
     data['id'] = this.id;
-    data['email'] = this.email;
-    data['senha'] = this.senha;
+    data['endereco'] = this.endereco;
+    data['numeroCasa'] = this.numeroCasa;
+    data['telefone'] = this.telefone;
     data['dataNascimento'] = this.dataNascimento;
-    data['uid'] = this.uid;
     return data;
   }
 
@@ -49,7 +53,7 @@ class Usuario {
     Prefs.setString("user.prefs", "");
   }
 
-  void save() {
+  /*void save() {
     // Map map = toMap();
 
     final Map<String, dynamic> userData = new Map<String, dynamic>();
@@ -60,9 +64,9 @@ class Usuario {
 
     String json = convert.json.encode(userData);
     Prefs.setString("user.prefs", json);
-  }
+  }*/
 
-  static Future<Usuario?> get() async {
+  /*static Future<Usuario?> get() async {
     String json = await Prefs.getString("user.prefs");
 
     if (json.isEmpty) {
@@ -73,10 +77,10 @@ class Usuario {
     Usuario user = Usuario.fromMap(map);
 
     return user;
-  }
+  }*/
 
   @override
   String toString() {
-    return 'Usuario{UID: $uid, id: $id, login: $email, nome: $nome, senha: $senha, Data: $dataNascimento}';
+    return 'Usuario{id: $id, nome: $nome, Data: $dataNascimento}';
   }
 }

@@ -8,6 +8,8 @@ import 'dart:io' as io;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:intl/intl.dart';
+
 
 import 'package:path/path.dart' as path;
 
@@ -24,21 +26,50 @@ class _PerfilPageState extends State<PerfilPage> {
   File? _file;
 
   final _tName = TextEditingController();
+  final _tEnd = TextEditingController();
+  final _tNum = TextEditingController();
+  final _tData = TextEditingController();
+  final _tFone = TextEditingController();
 
   String? urlFoto;
   User? user;
 
   ImageSource imageSource = ImageSource.gallery;
 
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  var maskFormatter = MaskTextInputFormatter(mask: '(##) # ####-####', filter: { "#": RegExp(r'[0-9]') });
+
   @override
   void initState() {
     super.initState();
 
     user = FirebaseAuth.instance.currentUser;
-
     if (user != null) {
       _tName.text = user!.displayName ?? "";
       print(">>>>>>> UID: ${user!.uid} <<<<<<<");
+
+      firestore.collection('users').doc(user!.uid).get().then((value) {
+        if (value.data() != null) {
+          final f = DateFormat('dd/MM/yyyy');
+          Usuario usuario = Usuario.fromMap(value.data()!);
+
+          _tName.text = usuario.nome ?? user!.displayName ?? "";
+          _tEnd.text = usuario.endereco ?? "";
+          _tNum.text = usuario.numeroCasa ?? "";
+          _tData.text = f.format(usuario.dataNascimento!.toDate());
+          _tFone.text = usuario.telefone ?? "";
+
+          print(">>>>>>>>>>>>>>>>>>>>>> USUÁRIO <<<<<<<<<<<<<<<<<<<<<<<");
+          print(usuario.id);
+          print(usuario.nome);
+          print(usuario.dataNascimento!.toDate());
+          print(usuario.endereco);
+          print(usuario.numeroCasa);
+          print(usuario.telefone);
+          print(">>>>>>>>>>>>>>>>>>>>>> USUÁRIO <<<<<<<<<<<<<<<<<<<<<<<");
+        }
+      });
     }
   }
 
@@ -119,16 +150,51 @@ class _PerfilPageState extends State<PerfilPage> {
               AppText(
                 hint: "Nome",
                 icon: Ionicons.md_person_circle_outline,
+                controller: _tName,
               ),
               const SizedBox(height: 8),
               AppText(
                 hint: "Endereço",
                 icon: MaterialCommunityIcons.google_maps,
+                controller: _tEnd,
               ),
               const SizedBox(height: 8),
               AppText(
                 hint: "Nº da casa",
                 icon: Ionicons.home,
+                controller: _tNum,
+              ),
+              const SizedBox(height: 8),
+              AppText(
+                hint: "Data de Nascimento",
+                icon: Ionicons.calendar,
+                controller: _tData,
+              ),
+              const SizedBox(height: 8),
+              AppText(
+                hint: "Telefone",
+                icon: Ionicons.md_phone_portrait_sharp,
+                controller: _tFone,
+              ),
+              Container(
+                margin: const EdgeInsets.only(top: 10),
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  color: Colors.white,
+                ),
+                padding: const EdgeInsets.only(left: 10),
+                child: TextFormField(
+                  controller: _tFone,
+                  validator: (s) => _validateFone(s),
+                  keyboardType: TextInputType.phone,
+                  textInputAction: TextInputAction.done,
+                  inputFormatters: [maskFormatter],
+                  decoration: const InputDecoration(
+                    border: InputBorder.none,
+                    hintText: "Telefone",
+                    prefixIcon: Icon(Ionicons.md_phone_portrait_sharp),
+                  ),
+                ),
               ),
               const SizedBox(height: 24),
               Container(
@@ -192,31 +258,42 @@ class _PerfilPageState extends State<PerfilPage> {
 
   /// The user selects a file, and the task is added to the list.
   Future<String?> uploadFile(File? file) async {
-    if (file == null) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Nenhum arquivo selecionado'),
-      ));
-      return null;
+    try {
+      if (file == null) {
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text('Nenhum arquivo selecionado'),
+        ));
+        return null;
+      }
+
+      firebase_storage.UploadTask uploadTask;
+
+      // Create a Reference to the file
+      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
+          .ref()
+          .child('users')
+          .child('/${user!.uid}/${user!.uid}');
+
+      final metadata = firebase_storage.SettableMetadata(
+          contentType: 'image/jpeg',
+          customMetadata: {'picked-file-path': file.path});
+
+      if (kIsWeb) {
+        uploadTask = ref.putData(await file.readAsBytes(), metadata);
+      } else {
+        uploadTask = ref.putFile(io.File(file.path), metadata);
+      }
+      print("DOWNLOAD URL >>>>> ${uploadTask.snapshot.ref.getDownloadURL()}");
+      return uploadTask.snapshot.ref.getDownloadURL();
+    } catch (e) {
+      alert(context, "Ocorreu um erro ao salvar o arquivo");
     }
+  }
 
-    firebase_storage.UploadTask uploadTask;
-
-    // Create a Reference to the file
-    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child('users')
-        .child('/${user!.uid}/${user!.uid}');
-
-    final metadata = firebase_storage.SettableMetadata(
-        contentType: 'image/jpeg',
-        customMetadata: {'picked-file-path': file.path});
-
-    if (kIsWeb) {
-      uploadTask = ref.putData(await file.readAsBytes(), metadata);
-    } else {
-      uploadTask = ref.putFile(io.File(file.path), metadata);
+  String? _validateFone(String? s) {
+    if(s == null) {
+      return "Digite seu telefone";
     }
-    print("DOWNLOAD URL >>>>> ${uploadTask.snapshot.ref.getDownloadURL()}");
-    return uploadTask.snapshot.ref.getDownloadURL();
+    return null;
   }
 }
