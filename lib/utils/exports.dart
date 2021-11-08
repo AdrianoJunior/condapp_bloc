@@ -46,3 +46,5 @@ export 'package:flutter_slidable/flutter_slidable.dart';
 export 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 export 'package:cond_app/pages/agenda/reservas/reserva.dart';
+export 'package:cond_app/pages/agenda/reservas/reservas_form_page.dart';
+export 'package:date_time_picker/date_time_picker.dart';
