@@ -16,6 +16,8 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
     super.initState();
 
     Intl.defaultLocale = 'pt_BR';
+
+    _controller3 = TextEditingController(text: DateTime.now().toString());
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -25,6 +27,12 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
   int _radioIndex = 0;
 
   var _showProgress = false;
+
+  String _valueChanged3 = '';
+  String _valueToValidate3 = '';
+  String _valueSaved3 = '';
+
+  late TextEditingController _controller3;
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +82,45 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
             firstDate: DateTime.now(),
             type: DateTimePickerType.date,
             lastDate: DateTime.utc(2022),
-            locale: const Locale('pt', 'BR'),
+            // locale: const Locale('pt', 'BR'),
+            initialDate: DateTime.now(),
+            timePickerEntryModeInput: false,
+            dateMask: "dd/MM/yyyy",
+            icon: Icon(
+              Ionicons.md_calendar,
+            ),
+          ),
+          const Divider(
+            thickness: 2,
+          ),
+          DateTimePicker(
+            type: DateTimePickerType.date,
+            //dateMask: 'yyyy/MM/dd',
+            controller: _controller3,
+            //initialValue: _initialValue,
+            firstDate: DateTime(2000),
+            lastDate: DateTime(2100),
+            icon: Icon(Icons.event),
+            dateLabelText: 'Date',
+            locale: Locale('pt', 'BR'),
+            onChanged: (val) async {
+              setState(() => _valueChanged3 = val);
+              DateTime dataTeste = DateTime.parse(_valueChanged3);
+
+              print("DATA >>>>>>>> ${dataTeste.toLocal()} <<<<<<<<<");
+
+              FirebaseFirestore.instance
+                  .collection('teste')
+                  .doc('testeData')
+                  .set({
+                "data": Timestamp.fromDate(dataTeste),
+              }).then((value) => alert(context, "Dados salvos com sucesso."));
+            },
+            validator: (val) {
+              setState(() => _valueToValidate3 = val ?? '');
+              return null;
+            },
+            onSaved: (val) => setState(() => _valueSaved3 = val ?? ''),
           ),
           const Divider(
             thickness: 2,
@@ -185,16 +231,14 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
     if (!_formKey.currentState!.validate()) {
       return;
     }
-/*
 
-    // Cria o carro
+    // Cria a reserva
     var r = reserva ?? Reserva();
-    r.nome = tNome.text;
-    r.descricao = tDesc.text;
-    r.tipo = _getTipo();
+    r.local = _getLocal();
+    // r.dataReserva = tDesc.text;
+    // r.tipo = _getTipo();
 
-    print("Carro: $r");
-*/
+    print("Reserva: ${r.toString()}");
 
     setState(() {
       _showProgress = true;

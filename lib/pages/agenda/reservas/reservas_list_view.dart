@@ -7,6 +7,12 @@ class ReservasListView extends StatelessWidget {
   final f = DateFormat('dd/MM/yyyy - hh:mm');
   final fData = DateFormat('dd/MM/yyyy');
 
+
+  ReservasListView({required this.reservas});
+
+  late List<Reserva> reservasUser;
+
+
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -37,7 +43,7 @@ class ReservasListView extends StatelessWidget {
                 onTap: () {
                   alertCancel(
                     context,
-                    "Deseja excluir a sua reserva de: ${r.local}, do dia ${fData.format(r.dataEntrada!.toDate())}?"
+                    "Deseja excluir a sua reserva de: ${r.local}, do dia ${fData.format(r.dataReserva!.toDate())}?"
                         "\nA ação não pode ser desfeita",
                     callback: () {},
                   );
@@ -69,35 +75,19 @@ class ReservasListView extends StatelessWidget {
                       text: TextSpan(
                         children: [
                           const TextSpan(
-                            text: "Horário de entrada: ",
+                            text: "Data da reserva: ",
                             style: TextStyle(color: Colors.black),
                           ),
                           TextSpan(
                             text: f.format(
-                              r.dataEntrada!.toDate(),
+                              r.dataReserva!.toDate(),
                             ),
-                            style: TextStyle(color: Colors.black),
+                            style: const TextStyle(color: Colors.black),
                           ),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 16),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: "Horário de saída: ",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                          TextSpan(
-                            text: f.format(
-                              r.dataSaida!.toDate(),
-                            ),
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ],
-                      ),
-                    ),
+
                     const SizedBox(height: 8),
                   ],
                 ),

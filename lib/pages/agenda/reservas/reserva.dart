@@ -2,34 +2,34 @@ import 'package:cond_app/utils/exports.dart';
 import 'dart:convert' as convert;
 
 class Reserva {
+  String? reservaId;
   String? idMorador;
   double? valor;
   String? local;
-  Timestamp? dataEntrada;
-  Timestamp? dataSaida;
+  Timestamp? dataReserva;
 
-  Reserva(
-      {this.idMorador,
-        this.valor,
-        this.local,
-        this.dataEntrada,
-        this.dataSaida});
+  Reserva({
+    this.idMorador,
+    this.valor,
+    this.local,
+    this.dataReserva,
+  });
 
   Reserva.fromMap(Map<String, dynamic> json) {
+    reservaId = json['reservaId'];
     idMorador = json['idMorador'];
     valor = json['valor'];
     local = json['local'];
-    dataEntrada = json['dataEntrada'];
-    dataSaida = json['dataSaida'];
+    dataReserva = json['dataReserva'];
   }
 
   Map<String, dynamic> toMap() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['reservaId'] = this.reservaId;
     data['idMorador'] = this.idMorador;
     data['valor'] = this.valor;
     data['local'] = this.local;
-    data['dataEntrada'] = this.dataEntrada;
-    data['dataSaida'] = this.dataSaida;
+    data['dataReserva'] = this.dataReserva;
     return data;
   }
 
@@ -38,4 +38,8 @@ class Reserva {
     return json;
   }
 
+  @override
+  String toString() {
+    return 'Reserva{local: $local, data: $dataReserva';
+  }
 }
