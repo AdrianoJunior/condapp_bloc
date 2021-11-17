@@ -171,11 +171,11 @@ class _PerfilPageState extends State<PerfilPage> {
                 controller: _tData,
               ),
               const SizedBox(height: 8),
-              AppText(
+              /*AppText(
                 hint: "Telefone",
                 icon: Ionicons.md_phone_portrait_sharp,
                 controller: _tFone,
-              ),
+              ),*/
               Container(
                 margin: const EdgeInsets.only(top: 10),
                 decoration: const BoxDecoration(
