@@ -1,6 +1,5 @@
 import 'package:cond_app/utils/exports.dart';
 
-
 class DrawerList extends StatelessWidget {
   UserAccountsDrawerHeader _header() {
     User? user = FirebaseAuth.instance.currentUser;
@@ -155,19 +154,6 @@ class DrawerList extends StatelessWidget {
               ],
             ),
             ListTile(
-              title: const Text("Configurações"),
-              leading: const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: Icon(
-                  Ionicons.md_settings,
-                  color: Colors.black,
-                ),
-              ),
-              onTap: () {
-                pop(context);
-              },
-            ),
-            ListTile(
               title: const Text("Informações"),
               leading: const Padding(
                 padding: EdgeInsets.all(8.0),
@@ -182,7 +168,12 @@ class DrawerList extends StatelessWidget {
                   (PackageInfo packageInfo) {
                     String appName = packageInfo.appName;
                     String version = packageInfo.version;
-                    alert(context, "Aplicativo CondApp\nVersão $version");
+                    alert(
+                      context,
+                      "Aplicativo CondApp\nVersão $version"
+                          "\n\nDesenvolvido por: Adriano Coutinho "
+                          "e Renan Victal",
+                    );
                   },
                 );
               },

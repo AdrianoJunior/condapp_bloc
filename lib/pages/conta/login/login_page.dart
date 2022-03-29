@@ -26,83 +26,81 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   _body() {
-    return SafeArea(
-      child: Form(
-        key: _formKey,
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 30),
-          child: Column(
-            children: <Widget>[
-              Expanded(flex: 1, child: HeaderContainer("Login")),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      AppText(
-                        hint: "Email",
-                        icon: Icons.email,
-                        controller: _tLogin,
-                        validator: (s) => _validateLogin(s),
-                        keyboardType: TextInputType.emailAddress,
-                        nextFocus: _focusSenha,
-                        inputAction: TextInputAction.next,
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.only(bottom: 30),
+        child: Column(
+          children: <Widget>[
+            Expanded(flex: 1, child: HeaderContainer("Login")),
+            Expanded(
+              flex: 1,
+              child: Container(
+                margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    AppText(
+                      hint: "Email",
+                      icon: Icons.email,
+                      controller: _tLogin,
+                      validator: (s) => _validateLogin(s),
+                      keyboardType: TextInputType.emailAddress,
+                      nextFocus: _focusSenha,
+                      inputAction: TextInputAction.next,
+                    ),
+                    AppText(
+                      hint: "Senha",
+                      icon: Icons.vpn_key,
+                      controller: _tSenha,
+                      validator: (s) => _validateSenha(s),
+                      keyboardType: TextInputType.text,
+                      focusNode: _focusSenha,
+                      inputAction: TextInputAction.done,
+                      password: true,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: StreamBuilder<bool>(
+                            stream: _bloc.stream,
+                            initialData: false,
+                            builder: (context, snapshot) {
+                              return ButtonWidget(
+                                btnText: "LOGIN",
+                                onClick: _onClickLogin,
+                                showProgress: snapshot.data!,
+                              );
+                            }),
                       ),
-                      AppText(
-                        hint: "Senha",
-                        icon: Icons.vpn_key,
-                        controller: _tSenha,
-                        validator: (s) => _validateSenha(s),
-                        keyboardType: TextInputType.text,
-                        focusNode: _focusSenha,
-                        inputAction: TextInputAction.done,
-                        password: true,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: StreamBuilder<bool>(
-                              stream: _bloc.stream,
-                              initialData: false,
-                              builder: (context, snapshot) {
-                                return ButtonWidget(
-                                  btnText: "LOGIN",
-                                  onClick: _onClickLogin,
-                                  showProgress: snapshot.data!,
-                                );
-                              }),
+                    ),
+                    InkWell(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: "Não possui uma conta? ",
+                              style: TextStyle(
+                                color: Colors.black,
+                              ),
+                            ),
+                            TextSpan(
+                              text: "Registre-se",
+                              style: TextStyle(
+                                color: Colors.blue[700],
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      InkWell(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: "Não possui uma conta? ",
-                                style: TextStyle(
-                                  color: Colors.black,
-                                ),
-                              ),
-                              TextSpan(
-                                text: "Registre-se",
-                                style: TextStyle(
-                                  color: Colors.blue[700],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        onTap: () {
-                          push(context, const CadastroPage(), replace: true);
-                        },
-                      ),
-                    ],
-                  ),
+                      onTap: () {
+                        push(context, const CadastroPage(), replace: true);
+                      },
+                    ),
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

@@ -37,87 +37,85 @@ class _CadastroPageState extends State<CadastroPage> {
   }
 
   _body() {
-    return SafeArea(
-      child: Form(
-        key: _formKey,
-        child: Container(
-          padding: const EdgeInsets.only(bottom: 30),
-          child: Column(
-            children: <Widget>[
-              HeaderContainer("Registre-se"),
-              Expanded(
-                flex: 1,
-                child: Container(
-                  margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    children: <Widget>[
-                      AppText(
-                        hint: "Nome",
-                        icon: Icons.person,
-                        inputAction: TextInputAction.next,
-                        keyboardType: TextInputType.name,
-                        validator: (s) => _validateNome(s),
-                        controller: _tNome,
-                        nextFocus: _focusEmail,
+    return Form(
+      key: _formKey,
+      child: Container(
+        padding: const EdgeInsets.only(bottom: 30),
+        child: Column(
+          children: <Widget>[
+            HeaderContainer("Registre-se"),
+            Expanded(
+              flex: 1,
+              child: Container(
+                margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  children: <Widget>[
+                    AppText(
+                      hint: "Nome",
+                      icon: Icons.person,
+                      inputAction: TextInputAction.next,
+                      keyboardType: TextInputType.name,
+                      validator: (s) => _validateNome(s),
+                      controller: _tNome,
+                      nextFocus: _focusEmail,
+                    ),
+                    AppText(
+                      hint: "E-mail",
+                      icon: Icons.email,
+                      inputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
+                      validator: (s) => _validateLogin(s),
+                      controller: _tLogin,
+                      nextFocus: _focusSenha,
+                      focusNode: _focusEmail,
+                    ),
+                    // _textInput(hint: "Phone Number", icon: Icons.call),
+                    AppText(
+                      hint: "Senha",
+                      icon: Icons.vpn_key,
+                      inputAction: TextInputAction.done,
+                      keyboardType: TextInputType.text,
+                      validator: (s) => _validateSenha(s),
+                      controller: _tSenha,
+                      focusNode: _focusSenha,
+                      nextFocus: _focusData,
+                      password: true,
+                    ),
+                    Expanded(
+                      child: Center(
+                        child: StreamBuilder<bool>(
+                            stream: _bloc.stream,
+                            initialData: false,
+                            builder: (context, snapshot) {
+                              return ButtonWidget(
+                                btnText: "REGISTRE-SE",
+                                onClick: _onClickCadastro,
+                                showProgress: snapshot.data!,
+                              );
+                            }),
                       ),
-                      AppText(
-                        hint: "E-mail",
-                        icon: Icons.email,
-                        inputAction: TextInputAction.next,
-                        keyboardType: TextInputType.emailAddress,
-                        validator: (s) => _validateLogin(s),
-                        controller: _tLogin,
-                        nextFocus: _focusSenha,
-                        focusNode: _focusEmail,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        push(context, const LoginPage(), replace: true);
+                      },
+                      child: RichText(
+                        text: TextSpan(children: [
+                          const TextSpan(
+                              text: "Já possui uma conta? ",
+                              style: TextStyle(color: Colors.black)),
+                          TextSpan(
+                              text: "Faça login",
+                              style: TextStyle(color: Colors.blue[700],),),
+                        ]),
                       ),
-                      // _textInput(hint: "Phone Number", icon: Icons.call),
-                      AppText(
-                        hint: "Senha",
-                        icon: Icons.vpn_key,
-                        inputAction: TextInputAction.done,
-                        keyboardType: TextInputType.text,
-                        validator: (s) => _validateSenha(s),
-                        controller: _tSenha,
-                        focusNode: _focusSenha,
-                        nextFocus: _focusData,
-                        password: true,
-                      ),
-                      Expanded(
-                        child: Center(
-                          child: StreamBuilder<bool>(
-                              stream: _bloc.stream,
-                              initialData: false,
-                              builder: (context, snapshot) {
-                                return ButtonWidget(
-                                  btnText: "REGISTRE-SE",
-                                  onClick: _onClickCadastro,
-                                  showProgress: snapshot.data!,
-                                );
-                              }),
-                        ),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          push(context, const LoginPage(), replace: true);
-                        },
-                        child: RichText(
-                          text: TextSpan(children: [
-                            const TextSpan(
-                                text: "Já possui uma conta? ",
-                                style: TextStyle(color: Colors.black)),
-                            TextSpan(
-                                text: "Faça login",
-                                style: TextStyle(color: Colors.blue[700],),),
-                          ]),
-                        ),
-                      )
-                    ],
-                  ),
+                    )
+                  ],
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ),
     );

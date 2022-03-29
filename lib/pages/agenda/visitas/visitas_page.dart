@@ -1,4 +1,6 @@
-import 'package:cond_app/pages/agenda/visitas/visitantes/visitantes_page.dart';
+import 'package:cond_app/pages/agenda/visitas/visitas_form_page.dart';
+import 'package:cond_app/pages/agenda/visitas/visitas_list_view.dart';
+import 'package:cond_app/pages/agenda/visitas/visitas_service.dart';
 import 'package:cond_app/utils/exports.dart';
 
 class VisitasPage extends StatefulWidget {
@@ -9,15 +11,58 @@ class VisitasPage extends StatefulWidget {
 }
 
 class _VisitasPageState extends State<VisitasPage> {
+  String? uid;
+
+  @override
+  void initState() {
+    super.initState();
+
+    uid = FirebaseAuth.instance.currentUser!.uid;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Visitas"),
+        title: const Text("Visitas"),
       ),
       body: _body(),
       drawer: DrawerList(),
-      floatingActionButton: SpeedDial(
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add, color: Colors.white),
+        onPressed: () {
+          push(context, VisitasFormPage());
+        },
+      ),
+    );
+  }
+
+  _body() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      child: StreamBuilder(
+          stream: VisitasService(uid: uid).stream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return const Center(
+                  child: Text(
+                "Não foi possível consultar as suas visitas agendadas.",
+              ));
+            }
+
+            final data = snapshot.requireData;
+
+            return VisitasListView(
+              visitas: data,
+            );
+          }),
+    );
+  }
+}
+
+/*SpeedDial(
         animatedIcon: AnimatedIcons.menu_close,
         elevation: 16,
         spaceBetweenChildren: 8,
@@ -25,26 +70,19 @@ class _VisitasPageState extends State<VisitasPage> {
           SpeedDialChild(
             onTap: () {},
             label: "Cadastrar visitante",
-            child: Icon(MaterialIcons.person_add_alt_1),
+            child: const Icon(MaterialIcons.person_add_alt_1),
           ),
           SpeedDialChild(
             onTap: () {
               push(context, VisitantesPage());
             },
             label: "Visitantes",
-            child: Icon(MaterialIcons.person_search),
+            child: const Icon(MaterialIcons.person_search),
           ),
           SpeedDialChild(
             onTap: () {},
             label: "Nova visita",
-            child: Icon(MaterialCommunityIcons.calendar_clock),
+            child: const Icon(MaterialCommunityIcons.calendar_clock),
           ),
         ],
-      ),
-    );
-  }
-
-  _body() {
-    return Container();
-  }
-}
+      ),*/
