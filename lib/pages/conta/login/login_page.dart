@@ -1,4 +1,5 @@
 import 'package:cond_app/utils/exports.dart';
+import 'package:email_validator/email_validator.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -32,13 +33,13 @@ class _LoginPageState extends State<LoginPage> {
         padding: const EdgeInsets.only(bottom: 30),
         child: Column(
           children: <Widget>[
-            Expanded(flex: 1, child: HeaderContainer("Login")),
+            HeaderContainer("Login"),
             Expanded(
               flex: 1,
               child: Container(
                 margin: const EdgeInsets.only(left: 20, right: 20, top: 30),
                 child: Column(
-                  mainAxisSize: MainAxisSize.max,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     AppText(
                       hint: "Email",
@@ -137,6 +138,8 @@ class _LoginPageState extends State<LoginPage> {
   String? _validateLogin(String text) {
     if (text.isEmpty) {
       return "Por favor, digite seu e-mail";
+    } else if(!EmailValidator.validate(text)) {
+      return "Por favor, digite um e-mail válido.";
     }
     return null;
   }

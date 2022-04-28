@@ -1,17 +1,34 @@
 import 'package:cond_app/pages/agenda/visitas/visita.dart';
 import 'package:cond_app/utils/exports.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class VisitasFormPage extends StatefulWidget {
+  Visita? visita = Visita();
+
+
+  VisitasFormPage({this.visita});
+
   @override
   _VisitasFormPageState createState() => _VisitasFormPageState();
 }
 
 class _VisitasFormPageState extends State<VisitasFormPage> {
   final _formKey = GlobalKey<FormState>();
-  Visita? visita = Visita();
+  get visita => widget.visita;
   final _tVisitante = TextEditingController();
   final _tRGVisitante = TextEditingController();
+  final f = DateFormat('dd/MM/yyyy - hh:mm');
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (visita != null) {
+      _tVisitante.text = visita!.nomeVisitante!;
+      _tRGVisitante.text = visita!.RGVisitante!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +59,6 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
               icon: Ionicons.document_text,
               validator: (s) => _validateDoc(s),
               controller: _tRGVisitante,
-
             ),
             const SizedBox(height: 8),
             Container(
@@ -51,16 +67,21 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
                 color: Colors.white,
               ),
               child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                 child: DateTimePicker(
-                  initialValue: '',
+                  initialValue: visita != null
+                      ? f.format(DateTime.fromMillisecondsSinceEpoch(
+                          visita!.dataVisita!.millisecondsSinceEpoch))
+                      : '',
                   firstDate: DateTime.now(),
                   lastDate: DateTime(2100),
                   dateLabelText: 'Data',
                   icon: const Icon(Ionicons.calendar),
                   onChanged: (val) {
                     print(val);
-                    visita!.dataVisita = Timestamp.fromDate(DateTime.parse(val));
+                    visita!.dataVisita =
+                        Timestamp.fromDate(DateTime.parse(val));
                   },
                   validator: (val) {
                     print(val);
@@ -71,7 +92,10 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
               ),
             ),
             const SizedBox(height: 16),
-            ButtonWidget(btnText: "Confirmar", onClick: _onClickSalvar,),
+            ButtonWidget(
+              btnText: "Confirmar",
+              onClick: _onClickSalvar,
+            ),
           ],
         ),
       ),
@@ -85,19 +109,17 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
 
     String nomeVisitante = _tVisitante.text;
     String docVisitante = _tRGVisitante.text;
-
-
   }
 
   _validateName(String? text) {
-    if(text == null) {
+    if (text == null) {
       return "Digite o nome do visitante";
     }
     return null;
   }
 
   _validateDoc(String? text) {
-    if(text == null) {
+    if (text == null) {
       return "Digite o documento do visitante";
     }
     return null;

@@ -14,9 +14,10 @@ class DrawerList extends StatelessWidget {
         ),
       ),
       accountEmail: Text(user.email ?? "E-mail"),
-      currentAccountPicture: const CircleAvatar(
+      currentAccountPicture: CircleAvatar(
         backgroundColor: Colors.white,
         backgroundImage: NetworkImage(
+          user.photoURL ??
           "https://firebasestorage.googleapis.com/v0/b/condapp-4d828.appspot.com/o/default_images%2Fdefault_image.png?alt=media&token=f252dfca-3e58-4c86-b33f-7c5d6115bd8d",
         ),
       ),

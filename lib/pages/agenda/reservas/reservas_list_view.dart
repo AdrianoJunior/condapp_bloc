@@ -1,4 +1,5 @@
 import 'package:cond_app/utils/exports.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
 class ReservasListView extends StatelessWidget {
@@ -7,11 +8,9 @@ class ReservasListView extends StatelessWidget {
   final f = DateFormat('dd/MM/yyyy - hh:mm');
   final fData = DateFormat('dd/MM/yyyy');
 
-
-  ReservasListView({required this.reservas});
+  ReservasListView({Key? key, required this.reservas}) : super(key: key);
 
   late List<Reserva> reservasUser;
-
 
   @override
   Widget build(BuildContext context) {
@@ -27,30 +26,31 @@ class ReservasListView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(top: 4),
           child: Slidable(
-            actionPane: const SlidableDrawerActionPane(),
-            actions: [
-              IconSlideAction(
-                color: Colors.green,
-                onTap: () {},
-                caption: 'Editar',
-                icon: Icons.edit,
-              ),
-            ],
-            secondaryActions: [
-              IconSlideAction(
-                color: Colors.red,
-                caption: 'Excluir',
-                onTap: () {
-                  alertCancel(
-                    context,
-                    "Deseja excluir a sua reserva de: ${r.local}, do dia ${fData.format(r.dataReserva!.toDate())}?"
-                        "\nA ação não pode ser desfeita",
-                    callback: () {},
-                  );
-                },
-                icon: Icons.delete,
-              ),
-            ],
+            startActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                    onPressed: (_) {},
+                    icon: Icons.edit,
+                    backgroundColor: Colors.green,
+                    label: "Editar"),
+              ],
+            ),
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (_) {
+                    alertCancel(
+                      context,
+                      "Deseja excluir a sua reserva de: ${r.local}, do dia ${fData.format(r.dataReserva!.toDate())}?"
+                      "\nA ação não pode ser desfeita",
+                      callback: () {},
+                    );
+                  },
+                ),
+              ],
+            ),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
@@ -87,7 +87,6 @@ class ReservasListView extends StatelessWidget {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 8),
                   ],
                 ),

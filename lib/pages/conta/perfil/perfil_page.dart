@@ -201,7 +201,9 @@ class _PerfilPageState extends State<PerfilPage> {
                 width: MediaQuery.of(context).size.width,
                 child: ButtonWidget(
                   btnText: "Salvar",
-                  onClick: () {},
+                  onClick: () {
+
+                  },
                 ),
               ),
             ],
@@ -240,7 +242,7 @@ class _PerfilPageState extends State<PerfilPage> {
     XFile? pickedFile = await imagePicker.pickImage(source: imageSource);
 
     if (pickedFile != null) {
-      File? file = await ImageCropper.cropImage(
+      File? file = await ImageCropper().cropImage(
           sourcePath: pickedFile.path,
           aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
           androidUiSettings: const AndroidUiSettings(
@@ -283,7 +285,9 @@ class _PerfilPageState extends State<PerfilPage> {
       } else {
         uploadTask = ref.putFile(io.File(file.path), metadata);
       }
-      print("DOWNLOAD URL >>>>> ${uploadTask.snapshot.ref.getDownloadURL()}");
+      print("DOWNLOAD URL >>>>> ${await uploadTask.snapshot.ref.getDownloadURL()}");
+      String? photoUrl = await uploadTask.snapshot.ref.getDownloadURL();
+      FirebaseAuth.instance.currentUser?.updatePhotoURL(photoUrl);
       return uploadTask.snapshot.ref.getDownloadURL();
     } catch (e) {
       alert(context, "Ocorreu um erro ao salvar o arquivo");

@@ -1,4 +1,5 @@
 import 'package:cond_app/utils/exports.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
 class VisitantesListView extends StatelessWidget {
@@ -22,30 +23,33 @@ class VisitantesListView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(top: 4),
           child: Slidable(
-            actionPane: const SlidableDrawerActionPane(),
-            actions: [
-              IconSlideAction(
-                color: Colors.green,
-                onTap: () {},
-                caption: 'Editar',
-                icon: Icons.edit,
-              ),
-            ],
-            secondaryActions: [
-              IconSlideAction(
-                color: Colors.red,
-                caption: 'Excluir',
-                onTap: () {
-                  alertCancel(
-                    context,
-                    "Deseja excluir o cadastro do visitante: ${v.nome}?"
-                    "\nA ação não pode ser desfeita",
-                    callback: () {},
-                  );
-                },
-                icon: Icons.delete,
-              ),
-            ],
+            startActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                    onPressed: (_) {},
+                    icon: Icons.edit,
+                    backgroundColor: Colors.green,
+                    label: "Editar"),
+              ],
+            ),
+            endActionPane: ActionPane(
+              motion: const ScrollMotion(),
+              children: [
+                SlidableAction(
+                  onPressed: (_) {
+                    alertCancel(
+                      context,
+                      "Deseja excluir o cadastro do visitante: ${v.nome}?"
+                      "\nA ação não pode ser desfeita",
+                      callback: () {},
+                    );
+                  },
+                  icon: Icons.delete,
+                  backgroundColor: Colors.red,
+                ),
+              ],
+            ),
             child: Card(
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
