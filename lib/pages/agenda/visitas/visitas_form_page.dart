@@ -1,4 +1,5 @@
 import 'package:cond_app/pages/agenda/visitas/visita.dart';
+import 'package:cond_app/pages/agenda/visitas/visitas_bloc.dart';
 import 'package:cond_app/utils/exports.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -15,7 +16,10 @@ class VisitasFormPage extends StatefulWidget {
 
 class _VisitasFormPageState extends State<VisitasFormPage> {
   final _formKey = GlobalKey<FormState>();
+
+  Timestamp? timestampVisita;
   get visita => widget.visita;
+  final _bloc = VisitasBloc();
   final _tVisitante = TextEditingController();
   final _tRGVisitante = TextEditingController();
   final f = DateFormat('dd/MM/yyyy - hh:mm');
@@ -80,6 +84,7 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
                   icon: const Icon(Ionicons.calendar),
                   onChanged: (val) {
                     print(val);
+                    timestampVisita = Timestamp.fromDate(DateTime.parse(val));
                     visita!.dataVisita =
                         Timestamp.fromDate(DateTime.parse(val));
                   },
@@ -102,13 +107,24 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
     );
   }
 
-  _onClickSalvar() {
+  _onClickSalvar() async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
 
     String nomeVisitante = _tVisitante.text;
     String docVisitante = _tRGVisitante.text;
+
+    Visita v = Visita(dataVisita: timestampVisita, nomeVisitante: nomeVisitante, RGVisitante: docVisitante);
+
+    ApiResponse visitaResponse = await _bloc.addVisita(visita: v, uid: FirebaseAuth.instance.currentUser!.uid);
+
+    if(visitaResponse.ok!) {
+      alert(context, 'Visita agendada com sucesso!');
+    } else {
+      alert(context, 'Não foi possível agendar a visita.\nTente novamente!');
+    }
+
   }
 
   _validateName(String? text) {

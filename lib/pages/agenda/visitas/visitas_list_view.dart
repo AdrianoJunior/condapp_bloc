@@ -25,10 +25,12 @@ class VisitasListView extends StatelessWidget {
         Visita v = visitas.docs[idx].data();
 
         return Padding(
-          padding: EdgeInsets.only(top: 4),
+          padding: const EdgeInsets.only(top: 4),
           child: ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(16)),
+            borderRadius: const BorderRadius.all(const Radius.circular(16)),
             child: Slidable(
+              closeOnScroll: true,
+
               startActionPane: ActionPane(
                 motion: const ScrollMotion(),
                 children: [
@@ -39,6 +41,7 @@ class VisitasListView extends StatelessWidget {
                     onPressed: (_) {
                       push(context, VisitasFormPage(visita: v));
                     },
+                    label: 'Editar',
                   ),
                 ],
               ),
@@ -61,6 +64,7 @@ class VisitasListView extends StatelessWidget {
                         }
                       });
                     },
+                    label: 'Excluir',
                   ),
                 ],
               ),
@@ -95,7 +99,7 @@ class VisitasListView extends StatelessWidget {
                               ),
                               TextSpan(
                                 text: v.nomeVisitante,
-                                style: TextStyle(color: Colors.black),
+                                style: const TextStyle(color: Colors.black),
                               ),
                             ],
                           ),
@@ -110,7 +114,7 @@ class VisitasListView extends StatelessWidget {
                               ),
                               TextSpan(
                                 text: v.RGVisitante,
-                                style: TextStyle(color: Colors.black),
+                                style: const TextStyle(color: Colors.black),
                               ),
                             ],
                           ),
