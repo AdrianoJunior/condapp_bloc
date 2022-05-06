@@ -117,12 +117,27 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
 
     Visita v = Visita(dataVisita: timestampVisita, nomeVisitante: nomeVisitante, RGVisitante: docVisitante);
 
-    ApiResponse visitaResponse = await _bloc.addVisita(visita: v, uid: FirebaseAuth.instance.currentUser!.uid);
+    ApiResponse visitaResponse;
+    if(widget.visita == null) {
+      visitaResponse = await _bloc.addVisita(
+          visita: v, uid: FirebaseAuth.instance.currentUser!.uid);
 
-    if(visitaResponse.ok!) {
-      alert(context, 'Visita agendada com sucesso!');
+      if (visitaResponse.ok!) {
+        alert(context, 'Visita agendada com sucesso!');
+      } else {
+        alert(context, visitaResponse.msg!);
+      }
     } else {
-      alert(context, 'Não foi possível agendar a visita.\nTente novamente!');
+
+      visitaResponse = await _bloc.updateVisita(
+          visita: v, uid: FirebaseAuth.instance.currentUser!.uid);
+
+      if (visitaResponse.ok!) {
+        alert(context, 'Visita atualizada com sucesso!');
+      } else {
+        alert(context, visitaResponse.msg!);
+      }
+
     }
 
   }
