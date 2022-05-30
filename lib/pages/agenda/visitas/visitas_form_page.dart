@@ -8,7 +8,7 @@ class VisitasFormPage extends StatefulWidget {
   Visita? visita = Visita();
 
 
-  VisitasFormPage({this.visita});
+  VisitasFormPage({Key? key, this.visita}) : super(key: key);
 
   @override
   _VisitasFormPageState createState() => _VisitasFormPageState();

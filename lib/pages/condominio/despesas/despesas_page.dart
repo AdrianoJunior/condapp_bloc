@@ -14,21 +14,21 @@ class _DespesasPageState extends State<DespesasPage> {
   final f = DateFormat('dd/MM/yyyy');
 
   List<Despesa> despesas = [
-    Despesa(
-      desc: "Campo de futebol",
+    /*Despesa(
+      nome: "Campo de futebol",
       valor: 25.00,
       dataVencimento: DateTime(2022, 04, 05),
     ),
     Despesa(
-      desc: "Salão de festas",
+      nome: "Salão de festas",
       valor: 75.00,
       dataVencimento: DateTime(2022, 04, 20),
     ),
     Despesa(
-      desc: "Quiosque/churrasqueira",
+      nome: "Quiosque/churrasqueira",
       valor: 50.00,
       dataVencimento: DateTime(2022, 04, 18),
-    ),
+    ),*/
   ];
 
   @override
@@ -51,9 +51,9 @@ class _DespesasPageState extends State<DespesasPage> {
           Despesa d = despesas[idx];
           String? asset;
 
-          if(d.desc == 'Quiosque/churrasqueira') {
+          if(d.nome == 'Quiosque/churrasqueira') {
             asset = 'assets/images/churrasqueira.jpg';
-          } else if (d.desc == "Salão de festas") {
+          } else if (d.nome == "Salão de festas") {
             asset = 'assets/images/salao_festa.jpeg';
           } else {
             asset = 'assets/images/futebol.jpg';
@@ -76,7 +76,7 @@ class _DespesasPageState extends State<DespesasPage> {
                       children: [
                         const SizedBox(height: 8),
                         Text(
-                          d.desc!,
+                          d.nome!,
                           style: const TextStyle(
                               color: Colors.black, fontSize: 18),
                         ),
@@ -107,7 +107,7 @@ class _DespesasPageState extends State<DespesasPage> {
                                     color: Colors.black, fontSize: 18),
                               ),
                               TextSpan(
-                                text: f.format(d.dataVencimento!),
+                                text: f.format(d.dataVencimento!.toDate()),
                                 style: const TextStyle(
                                     color: Colors.black, fontSize: 18),
                               ),
