@@ -1,10 +1,14 @@
+import 'package:cond_app/firebase/firebase_options.dart';
 import 'package:cond_app/utils/exports.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: MyFirebaseOptions.options,
+
+  );
   runApp(const MyApp());
 }
 

@@ -10,7 +10,6 @@ class ReservasPage extends StatefulWidget {
 }
 
 class _ReservasPageState extends State<ReservasPage> {
-
   String? uid;
 
   @override
@@ -19,6 +18,7 @@ class _ReservasPageState extends State<ReservasPage> {
 
     uid = FirebaseAuth.instance.currentUser!.uid;
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,6 +50,10 @@ class _ReservasPageState extends State<ReservasPage> {
             } else if (snapshot.hasError) {
               return const Center(
                   child: Text("Não foi possível consultar as reuniões."));
+            } else if (snapshot.data == null) {
+              return const Center(
+                  child:
+                      Text("Nenhuma reserva encontrada para os próximos dias"));
             }
 
             final data = snapshot.requireData;

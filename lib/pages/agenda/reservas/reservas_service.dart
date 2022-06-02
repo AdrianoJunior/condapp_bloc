@@ -12,5 +12,5 @@ class ReservasService {
         toFirestore: (reserva, _) => reserva.toMap(),
       );
 
-  Stream<QuerySnapshot> get stream => _reservas.orderBy('dataReserva').where('uid' == uid).snapshots();
+  Stream<QuerySnapshot> get stream => _reservas.orderBy('dataReserva').where('idMorador', isEqualTo: uid).snapshots();
 }
