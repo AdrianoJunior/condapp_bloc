@@ -1,3 +1,5 @@
+import 'package:cond_app/pages/condominio/despesas/despesas_list_view.dart';
+import 'package:cond_app/pages/condominio/despesas/despesas_service.dart';
 import 'package:cond_app/utils/exports.dart';
 import 'package:intl/intl.dart';
 
@@ -12,6 +14,15 @@ class DespesasPage extends StatefulWidget {
 
 class _DespesasPageState extends State<DespesasPage> {
   final f = DateFormat('dd/MM/yyyy');
+
+  String? uid;
+
+  @override
+  void initState() {
+    super.initState();
+
+    uid = FirebaseAuth.instance.currentUser!.uid;
+  }
 
   List<Despesa> despesas = [
     /*Despesa(
@@ -45,85 +56,31 @@ class _DespesasPageState extends State<DespesasPage> {
   _body() {
     return Container(
       padding: const EdgeInsets.all(16),
-      child: ListView.builder(
-        itemCount: despesas.length,
-        itemBuilder: (context, idx) {
-          Despesa d = despesas[idx];
-          String? asset;
-
-          if(d.nome == 'Quiosque/churrasqueira') {
-            asset = 'assets/images/churrasqueira.jpg';
-          } else if (d.nome == "Salão de festas") {
-            asset = 'assets/images/salao_festa.jpeg';
-          } else {
-            asset = 'assets/images/futebol.jpg';
-          }
-          return Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Card(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: Image.asset(
-                        asset,
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(height: 8),
-                        Text(
-                          d.nome!,
-                          style: const TextStyle(
-                              color: Colors.black, fontSize: 18),
-                        ),
-                        const SizedBox(height: 8),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: "Valor: R\$ ",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              TextSpan(
-                                text: d.valor!.toStringAsFixed(2),
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              const TextSpan(
-                                text: "Vencimento: ",
-                                style: TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                              TextSpan(
-                                text: f.format(d.dataVencimento!.toDate()),
-                                style: const TextStyle(
-                                    color: Colors.black, fontSize: 18),
-                              ),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 8),
-                      ],
-                    ),
-                  ],
+      child: StreamBuilder(
+          stream: DespesasService(uid: uid).stream,
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(child: CircularProgressIndicator());
+            } else if (snapshot.hasError) {
+              return const Center(
+                child: Text(
+                  "Não foi possível consultar as suas despesas.",
                 ),
-              ),
-            ),
-          );
-        },
-      ),
+              );
+            } else if(snapshot.data == null) {
+              return const Center(
+                child: Text(
+                  "Nenhuma despesa encontrada.",
+                ),
+              );
+            }
+
+            final data = snapshot.requireData;
+
+            print(snapshot.requireData);
+
+            return DespesasListView(despesas: data);
+          }),
     );
   }
 }

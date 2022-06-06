@@ -5,10 +5,10 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
+  kIsWeb ? await Firebase.initializeApp(
     options: MyFirebaseOptions.options,
 
-  );
+  ) : await Firebase.initializeApp();
   runApp(const MyApp());
 }
 

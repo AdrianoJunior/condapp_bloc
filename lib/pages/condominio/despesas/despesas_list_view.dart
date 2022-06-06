@@ -14,7 +14,7 @@ class DespesasListView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: despesas != null ? despesas.length : 0,
+      itemCount: despesas != null ? despesas.size : 0,
       itemBuilder: (context, idx) {
         if (despesas == null ) {
           return const Center(
@@ -22,101 +22,75 @@ class DespesasListView extends StatelessWidget {
         }
         Despesa d = despesas.docs[idx].data();
 
+        String? asset;
+
+        if(d.nome == 'Quiosque/churrasqueira') {
+          asset = 'assets/images/churrasqueira.jpg';
+        } else if (d.nome == "Salão de festas") {
+          asset = 'assets/images/salao_festa.jpeg';
+        } else {
+          asset = 'assets/images/futebol.jpg';
+        }
         return Padding(
-          padding: const EdgeInsets.only(top: 4),
-          child: InkWell(
-            onTap: () {
-              push(context, DespesaPage(despesa: d));
-            },
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              elevation: 8,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text(
-                      "Descrição",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
+          padding: const EdgeInsets.only(top: 8),
+          child: Card(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Image.asset(
+                      asset,
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "${d.nome}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 18,
+                  ),
+                  const SizedBox(width: 8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(height: 8),
+                      Text(
+                        d.nome!,
+                        style: const TextStyle(
+                            color: Colors.black, fontSize: 18),
                       ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "Vencimento",
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 14,
-                      ),
-                    ),
-                    Text(
-                      f.format(d.dataVencimento!.toDate()),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    const Text(
-                      "Valor",
-                      style: TextStyle(
-                        fontWeight: FontWeight.w700,
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      "R\$ ${d.valor!}",
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
-                      ),
-                    ),
-                    /*ButtonBarTheme(
-                      data: ButtonBarTheme.of(context),
-                      child: ButtonBar(
-                        children: [
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              "Confirmar",
+                      const SizedBox(height: 8),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: "Valor: R\$ ",
                               style: TextStyle(
-                                color: Color(0xff3DBF40),
-                                fontSize: 16,
-                              ),
+                                  color: Colors.black, fontSize: 18),
                             ),
-                          ),
-                          TextButton(
-                            onPressed: () {},
-                            child: const Text(
-                              "Negar",
-                              style: TextStyle(
-                                color: Color(0xff8F1919),
-                                fontSize: 16,
-                              ),
+                            TextSpan(
+                              text: d.valor!.toStringAsFixed(2),
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 18),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    )*/
-                  ],
-                ),
+                      const SizedBox(height: 8),
+                      RichText(
+                        text: TextSpan(
+                          children: [
+                            const TextSpan(
+                              text: "Vencimento: ",
+                              style: TextStyle(
+                                  color: Colors.black, fontSize: 18),
+                            ),
+                            TextSpan(
+                              text: f.format(d.dataVencimento!.toDate()),
+                              style: const TextStyle(
+                                  color: Colors.black, fontSize: 18),
+                            ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
