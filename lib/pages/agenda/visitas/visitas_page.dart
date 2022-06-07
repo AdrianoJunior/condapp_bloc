@@ -31,7 +31,7 @@ class _VisitasPageState extends State<VisitasPage> {
       floatingActionButton: FloatingActionButton(
         child: const Icon(Icons.add, color: Colors.white),
         onPressed: () {
-          push(context, VisitasFormPage());
+          Navigator.pushNamed(context, '/visitas/cadastrar/');
         },
       ),
     );
