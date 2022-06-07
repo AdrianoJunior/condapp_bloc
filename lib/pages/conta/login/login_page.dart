@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
     print("\n\n\nRESULT >>>>>>> ${userResponse.ok}\n\n\n");
 
     if (userResponse.ok!) {
-      push(context, const DespesasPage(), replace: true);
+      Navigator.pushReplacementNamed(context, '/');
     } else {
       alert(context, userResponse.msg!);
     }
