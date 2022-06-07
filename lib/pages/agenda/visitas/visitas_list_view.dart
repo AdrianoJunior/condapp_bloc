@@ -27,7 +27,7 @@ class VisitasListView extends StatelessWidget {
         return Padding(
           padding: const EdgeInsets.only(top: 4),
           child: ClipRRect(
-            borderRadius: const BorderRadius.all(const Radius.circular(16)),
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
             child: Slidable(
               closeOnScroll: true,
 

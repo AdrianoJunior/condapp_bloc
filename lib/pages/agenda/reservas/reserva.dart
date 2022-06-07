@@ -4,7 +4,7 @@ import 'dart:convert' as convert;
 class Reserva {
   String? reservaId;
   String? idMorador;
-  double? valor;
+  int? valor;
   String? local;
   Timestamp? dataReserva;
 
@@ -20,7 +20,7 @@ class Reserva {
     idMorador = json['idMorador'];
     valor = json['valor'];
     local = json['local'];
-    dataReserva = json['dataReserva'];
+    dataReserva = json['data'];
   }
 
   Map<String, dynamic> toMap() {
@@ -29,7 +29,7 @@ class Reserva {
     data['idMorador'] = this.idMorador;
     data['valor'] = this.valor;
     data['local'] = this.local;
-    data['dataReserva'] = this.dataReserva;
+    data['data'] = this.dataReserva;
     return data;
   }
 

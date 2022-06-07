@@ -10,8 +10,6 @@ class ReservasListView extends StatelessWidget {
 
   ReservasListView({Key? key, required this.reservas}) : super(key: key);
 
-  late List<Reserva> reservasUser;
-
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
@@ -25,70 +23,83 @@ class ReservasListView extends StatelessWidget {
 
         return Padding(
           padding: const EdgeInsets.only(top: 4),
-          child: Slidable(
-            startActionPane: ActionPane(
-              motion: const ScrollMotion(),
-              children: [
-                SlidableAction(
-                    onPressed: (_) {},
+          child: ClipRRect(
+            borderRadius: const BorderRadius.all(Radius.circular(16)),
+            child: Slidable(
+              closeOnScroll: true,
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (_) {
+                      push(context, ReservasFormPage(reserva: r,));
+                    },
                     icon: Icons.edit,
                     backgroundColor: Colors.green,
-                    label: "Editar"),
-              ],
-            ),
-            endActionPane: ActionPane(
-              motion: const ScrollMotion(),
-              children: [
-                SlidableAction(
-                  onPressed: (_) {
-                    alertCancel(
-                      context,
-                      "Deseja excluir a sua reserva de: ${r.local}, do dia ${fData.format(r.dataReserva!.toDate())}?"
-                      "\nA ação não pode ser desfeita",
-                      callback: () {},
-                    );
-                  },
-                ),
-              ],
-            ),
-            child: Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+                    label: "Editar",
+                  ),
+                ],
               ),
-              elevation: 8,
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: [
+                  SlidableAction(
+                    onPressed: (_) {
+                      alertCancel(
+                        context,
+                        "Deseja excluir a sua reserva de: ${r.local}, do dia ${fData.format(r.dataReserva!.toDate())}?"
+                        "\nA ação não pode ser desfeita",
+                        callback: () {},
+                      );
+                    },
+                    icon: Icons.delete_forever,
+                    backgroundColor: Colors.red,
+                    label: "Excluir",
+                  ),
+                ],
+              ),
               child: Container(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      "${r.local}",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          const TextSpan(
-                            text: "Data da reserva: ",
-                            style: TextStyle(color: Colors.black),
+                width: double.infinity,
+                child: Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  elevation: 8,
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          "${r.local}",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            fontSize: 18,
                           ),
-                          TextSpan(
-                            text: f.format(
-                              r.dataReserva!.toDate(),
-                            ),
-                            style: const TextStyle(color: Colors.black),
+                        ),
+                        const SizedBox(height: 16),
+                        const Text(
+                          "Data da reserva:",
+                          style: TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 18,
                           ),
-                        ],
-                      ),
+                        ),
+                        Text(
+                          f.format(r.dataReserva!.toDate()),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w400,
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                      ],
                     ),
-                    const SizedBox(height: 8),
-                  ],
+                  ),
                 ),
               ),
             ),
