@@ -3,7 +3,7 @@ import 'dart:convert' as convert;
 
 class Despesa {
   String? nome;
-  double? valor;
+  int? valor;
   Timestamp? dataVencimento;
 
   Despesa({this.nome, this.valor, this.dataVencimento});

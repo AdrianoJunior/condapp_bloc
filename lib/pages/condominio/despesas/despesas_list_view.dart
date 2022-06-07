@@ -2,14 +2,12 @@ import 'package:cond_app/pages/condominio/despesas/despesa.dart';
 import 'package:cond_app/utils/exports.dart';
 import 'package:intl/intl.dart';
 
-import 'despesa_page.dart';
-
 class DespesasListView extends StatelessWidget {
   var despesas;
 
   DespesasListView({Key? key, required this.despesas}) : super(key: key);
 
-  final f = DateFormat('dd/MM/yyyy - hh:mm');
+  final f = DateFormat('dd/MM/yyyy');
 
   @override
   Widget build(BuildContext context) {
