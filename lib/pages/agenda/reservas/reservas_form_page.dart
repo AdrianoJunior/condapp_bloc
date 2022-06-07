@@ -78,7 +78,7 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
               fontSize: 20,
             ),
           ),
-          DateTimePicker(
+          /*DateTimePicker(
             firstDate: DateTime.now(),
             type: DateTimePickerType.date,
             lastDate: DateTime.utc(2022),
@@ -89,7 +89,7 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
             icon: Icon(
               Ionicons.md_calendar,
             ),
-          ),
+          ),*/
           const Divider(
             thickness: 2,
           ),
@@ -100,7 +100,9 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
             //initialValue: _initialValue,
             firstDate: DateTime(2000),
             lastDate: DateTime(2100),
-            icon: Icon(Icons.event),
+            icon: Icon(
+              Ionicons.md_calendar,
+            ),
             dateLabelText: 'Date',
             locale: Locale('pt', 'BR'),
             onChanged: (val) async {
