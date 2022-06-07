@@ -31,7 +31,7 @@ class VisitasBloc extends SimpleBloc<bool> {
       FirebaseFirestore.instance
           .collection('users/$uid/visitas')
           .doc(visita.visitaId)
-          .set(visita.toMap());
+          .update(visita.toMap()) /*.set(visita.toMap())*/;
 
       return ApiResponse.ok(result: true);
     } catch (e) {

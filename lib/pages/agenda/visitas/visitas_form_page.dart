@@ -18,7 +18,7 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
   final _formKey = GlobalKey<FormState>();
 
   Timestamp? timestampVisita;
-  get visita => widget.visita;
+  Visita? get visita => widget.visita;
   final _bloc = VisitasBloc();
   final _tVisitante = TextEditingController();
   final _tRGVisitante = TextEditingController();
@@ -75,11 +75,12 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                 child: DateTimePicker(
                   initialValue: visita != null
-                      ? f.format(DateTime.fromMillisecondsSinceEpoch(
-                          visita!.dataVisita!.millisecondsSinceEpoch))
+                      ? f.format(visita!.dataVisita!.toDate())
                       : '',
-                  firstDate: DateTime.now(),
+                  firstDate: visita!.dataVisita!.toDate(),
                   lastDate: DateTime(2100),
+                  dateMask: 'dd/MM/yyyy',
+                  use24HourFormat: true,
                   dateLabelText: 'Data',
                   icon: const Icon(Ionicons.calendar),
                   onChanged: (val) {
@@ -99,7 +100,7 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
             const SizedBox(height: 16),
             ButtonWidget(
               btnText: "Confirmar",
-              onClick: _onClickSalvar,
+              onClick: () => _onClickSalvar(visita),
             ),
           ],
         ),
@@ -107,7 +108,7 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
     );
   }
 
-  _onClickSalvar() async {
+  _onClickSalvar(Visita? visita) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -115,15 +116,15 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
     String nomeVisitante = _tVisitante.text;
     String docVisitante = _tRGVisitante.text;
 
-    Visita v = Visita(dataVisita: timestampVisita, nomeVisitante: nomeVisitante, RGVisitante: docVisitante);
+    Visita v = visita ?? Visita(dataVisita: timestampVisita, nomeVisitante: nomeVisitante, RGVisitante: docVisitante);
 
     ApiResponse visitaResponse;
-    if(widget.visita == null) {
+    if(visita == null) {
       visitaResponse = await _bloc.addVisita(
           visita: v, uid: FirebaseAuth.instance.currentUser!.uid);
 
       if (visitaResponse.ok!) {
-        alert(context, 'Visita agendada com sucesso!');
+        alert(context, 'Visita agendada com sucesso!', callback: pop(context));
       } else {
         alert(context, visitaResponse.msg!);
       }
@@ -133,7 +134,7 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
           visita: v, uid: FirebaseAuth.instance.currentUser!.uid);
 
       if (visitaResponse.ok!) {
-        alert(context, 'Visita atualizada com sucesso!');
+        alert(context, 'Visita atualizada com sucesso!', callback: pop(context));
       } else {
         alert(context, visitaResponse.msg!);
       }
