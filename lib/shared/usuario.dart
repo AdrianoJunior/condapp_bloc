@@ -33,7 +33,6 @@ class Usuario {
         numeroCasa: user['numeroCasa'],
         telefone: user['telefone'],
         dataNascimento: user['dataNascimento'],
-    photoUrl: user['photoUrl'],
       );
 
   Map<String, dynamic> toMap() {
@@ -44,7 +43,6 @@ class Usuario {
     data['numeroCasa'] = this.numeroCasa;
     data['telefone'] = this.telefone;
     data['dataNascimento'] = this.dataNascimento;
-    data['photoUrl'] = this.photoUrl;
     return data;
   }
 

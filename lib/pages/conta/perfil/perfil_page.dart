@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cond_app/pages/conta/perfil/perfil_bloc.dart';
 import 'package:cond_app/utils/exports.dart';
 
 import 'package:firebase_core/firebase_core.dart' as firebase_core;
@@ -9,7 +10,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:intl/intl.dart';
-
 
 import 'package:path/path.dart' as path;
 
@@ -23,7 +23,8 @@ class PerfilPage extends StatefulWidget {
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-  File? _file;
+
+  final _bloc = PerfilBloc();
 
   final _tName = TextEditingController();
   final _tEnd = TextEditingController();
@@ -38,7 +39,12 @@ class _PerfilPageState extends State<PerfilPage> {
 
   FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  var maskFormatter = MaskTextInputFormatter(mask: '(##) # ####-####', filter: { "#": RegExp(r'[0-9]') });
+  var maskFormatter = MaskTextInputFormatter(
+      mask: '(##) # ####-####', filter: {"#": RegExp(r'[0-9]')});
+
+  final _formKey = GlobalKey<FormState>();
+
+  Timestamp dataNascimento = Timestamp.fromDate(DateTime.now());
 
   @override
   void initState() {
@@ -59,6 +65,7 @@ class _PerfilPageState extends State<PerfilPage> {
           _tNum.text = usuario.numeroCasa ?? "";
           _tData.text = f.format(usuario.dataNascimento!.toDate());
           _tFone.text = usuario.telefone ?? "";
+          dataNascimento = usuario.dataNascimento!;
 
           print(">>>>>>>>>>>>>>>>>>>>>> USUÁRIO <<<<<<<<<<<<<<<<<<<<<<<");
           print(usuario.id);
@@ -89,215 +96,226 @@ class _PerfilPageState extends State<PerfilPage> {
       child: Container(
         padding: const EdgeInsets.all(24),
         child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const SizedBox(height: 50),
-              Center(
-                child: InkWell(
-                  onTap: _onClickFoto,
-                  child: Stack(
-                    alignment: AlignmentDirectional.bottomEnd,
-                    fit: StackFit.loose,
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
-                        child: _file != null
-                            ? Image.file(
-                                _file!,
-                                height: 125,
-                                width: 125,
-                                fit: BoxFit.cover,
-                              )
-                            : urlFoto != null
-                                ? CachedNetworkImage(
-                                    width: 125,
-                                    height: 125,
-                                    imageUrl: urlFoto!,
-                                    fit: BoxFit.cover,
-                                    placeholder: (context, url) => Image.asset(
-                                        'assets/images/default_image.png',
-                                        height: 125,
-                                        width: 125,
-                                        fit: BoxFit.cover))
-                                : Image.asset(
-                                    'assets/images/default_image.png',
-                                    height: 125,
-                                    width: 125,
-                                    fit: BoxFit.cover,
-                                  ),
-                      ),
-                      Positioned(
-                        right: -3.9,
-                        bottom: -3.9,
-                        child: FloatingActionButton(
-                          mini: true,
-                          onPressed: _onClickFoto,
-                          child: const Center(
-                            child: Icon(
-                              Icons.add_a_photo_rounded,
-                              color: Colors.white,
+          child: Form(
+            key: _formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 50),
+                /*Center(
+                  child: InkWell(
+                    onTap: _onClickFoto,
+                    child: Stack(
+                      alignment: AlignmentDirectional.bottomEnd,
+                      fit: StackFit.loose,
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: _file != null
+                              ? Image.file(
+                                  _file!,
+                                  height: 125,
+                                  width: 125,
+                                  fit: BoxFit.cover,
+                                )
+                              : urlFoto != null
+                                  ? CachedNetworkImage(
+                                      width: 125,
+                                      height: 125,
+                                      imageUrl: urlFoto!,
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) => Image.asset(
+                                          'assets/images/default_image.png',
+                                          height: 125,
+                                          width: 125,
+                                          fit: BoxFit.cover))
+                                  : Image.asset(
+                                      'assets/images/default_image.png',
+                                      height: 125,
+                                      width: 125,
+                                      fit: BoxFit.cover,
+                                    ),
+                        ),
+                        Positioned(
+                          right: -3.9,
+                          bottom: -3.9,
+                          child: FloatingActionButton(
+                            mini: true,
+                            onPressed: _onClickFoto,
+                            child: const Center(
+                              child: Icon(
+                                Icons.add_a_photo_rounded,
+                                color: Colors.white,
+                              ),
                             ),
                           ),
-                        ),
-                      )
-                    ],
+                        )
+                      ],
+                    ),
                   ),
+                ),*/
+                // const SizedBox(height: 32),
+                AppText(
+                  hint: "Nome",
+                  icon: Ionicons.md_person_circle_outline,
+                  controller: _tName,
+                  validator: (s) => _validateNome(s),
                 ),
-              ),
-              const SizedBox(height: 32),
-              AppText(
-                hint: "Nome",
-                icon: Ionicons.md_person_circle_outline,
-                controller: _tName,
-              ),
-              const SizedBox(height: 8),
-              AppText(
-                hint: "Endereço",
-                icon: MaterialCommunityIcons.google_maps,
-                controller: _tEnd,
-              ),
-              const SizedBox(height: 8),
-              AppText(
-                hint: "Nº da casa",
-                icon: Ionicons.home,
-                controller: _tNum,
-              ),
-              const SizedBox(height: 8),
-              AppText(
-                hint: "Data de Nascimento",
-                icon: Ionicons.calendar,
-                controller: _tData,
-              ),
-              const SizedBox(height: 8),
-              /*AppText(
-                hint: "Telefone",
-                icon: Ionicons.md_phone_portrait_sharp,
-                controller: _tFone,
-              ),*/
-              Container(
-                margin: const EdgeInsets.only(top: 10),
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
-                  color: Colors.white,
+                const SizedBox(height: 8),
+                AppText(
+                  hint: "Endereço",
+                  icon: MaterialCommunityIcons.google_maps,
+                  controller: _tEnd,
+                  validator: (s) => _validateEndereco(s),
                 ),
-                padding: const EdgeInsets.only(left: 10),
-                child: TextFormField(
-                  controller: _tFone,
-                  validator: (s) => _validateFone(s),
-                  keyboardType: TextInputType.phone,
-                  textInputAction: TextInputAction.done,
-                  inputFormatters: [maskFormatter],
-                  decoration: const InputDecoration(
-                    border: InputBorder.none,
-                    hintText: "Telefone",
-                    prefixIcon: Icon(Ionicons.md_phone_portrait_sharp),
-                  ),
+                const SizedBox(height: 8),
+                AppText(
+                  hint: "Nº da casa",
+                  icon: Ionicons.home,
+                  controller: _tNum,
+                  validator: (s) => _validateNum(s),
                 ),
-              ),
-              const SizedBox(height: 24),
-              Container(
-                width: MediaQuery.of(context).size.width,
-                child: ButtonWidget(
-                  btnText: "Salvar",
-                  onClick: () {
+                const SizedBox(height: 8),
+                /*AppText(
+                  hint: "Data de Nascimento",
+                  icon: Ionicons.calendar,
+                  controller: _tData,
+                ),*/
 
-                  },
+                const SizedBox(height: 16),
+                Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                  ),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 8.0, vertical: 8.0),
+                  child: DateTimePicker(
+                    initialValue: dataNascimento.toDate().toString() ?? '',
+                    firstDate: DateTime(1980),
+                    lastDate: DateTime(2100),
+                    dateMask: 'dd/MM/yyyy',
+                    use24HourFormat: true,
+                    dateLabelText: 'Data',
+                    icon: const Icon(Ionicons.calendar),
+                    onChanged: (val) {
+                      print(val);
+                      dataNascimento = Timestamp.fromDate(DateTime.parse(val));
+                    },
+                    validator: (val) {
+                      print(val);
+                      return null;
+                    },
+                    onSaved: (val) => print(val),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                const SizedBox(height: 8),
+                /*AppText(
+                  hint: "Telefone",
+                  icon: Ionicons.md_phone_portrait_sharp,
+                  controller: _tFone,
+                ),*/
+                Container(
+                  margin: const EdgeInsets.only(top: 10),
+                  decoration: const BoxDecoration(
+                    borderRadius: BorderRadius.all(Radius.circular(20)),
+                    color: Colors.white,
+                  ),
+                  padding: const EdgeInsets.only(left: 10),
+                  child: TextFormField(
+                    controller: _tFone,
+                    validator: (s) => _validateFone(s),
+                    keyboardType: TextInputType.phone,
+                    textInputAction: TextInputAction.done,
+                    inputFormatters: [maskFormatter],
+                    decoration: const InputDecoration(
+                      border: InputBorder.none,
+                      hintText: "Telefone",
+                      prefixIcon: Icon(Ionicons.md_phone_portrait_sharp),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                Container(
+                  width: MediaQuery.of(context).size.width,
+                  child: StreamBuilder<bool>(
+                    stream: _bloc.stream,
+                    initialData: false,
+                    builder: (context, snapshot) {
+                      return ButtonWidget(
+                        btnText: "Salvar",
+                        onClick: _onClickUpdate,
+                      );
+                    }
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  Future<void> _onClickFoto() async {
-    await showModalBottomSheet(
-      context: context,
-      builder: (context) => Wrap(
-        children: [
-          ListTile(
-            leading: const Icon(Icons.camera_alt),
-            title: const Text('Câmera'),
-            onTap: () {
-              Navigator.pop(context);
-              imageSource = ImageSource.camera;
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.photo_album),
-            title: const Text('Galeria'),
-            onTap: () {
-              Navigator.pop(context);
-              imageSource = ImageSource.gallery;
-            },
-          ),
-        ],
-      ),
-    );
-
-    ImagePicker imagePicker = ImagePicker();
-    XFile? pickedFile = await imagePicker.pickImage(source: imageSource);
-
-    if (pickedFile != null) {
-      File? file = await ImageCropper().cropImage(
-          sourcePath: pickedFile.path,
-          aspectRatio: const CropAspectRatio(ratioX: 1, ratioY: 1),
-          androidUiSettings: const AndroidUiSettings(
-            toolbarTitle: "",
-          ));
-
-      if (file != null) {
-        setState(() {
-          this._file = file;
-        });
-        uploadFile(file);
-      }
-    }
-  }
-
-  /// The user selects a file, and the task is added to the list.
-  Future<String?> uploadFile(File? file) async {
-    try {
-      if (file == null) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-          content: Text('Nenhum arquivo selecionado'),
-        ));
-        return null;
-      }
-
-      firebase_storage.UploadTask uploadTask;
-
-      // Create a Reference to the file
-      firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-          .ref()
-          .child('users')
-          .child('/${user!.uid}/${user!.uid}');
-
-      final metadata = firebase_storage.SettableMetadata(
-          contentType: 'image/jpeg',
-          customMetadata: {'picked-file-path': file.path});
-
-      if (kIsWeb) {
-        uploadTask = ref.putData(await file.readAsBytes(), metadata);
-      } else {
-        uploadTask = ref.putFile(io.File(file.path), metadata);
-      }
-      print("DOWNLOAD URL >>>>> ${await uploadTask.snapshot.ref.getDownloadURL()}");
-      String? photoUrl = await uploadTask.snapshot.ref.getDownloadURL();
-      FirebaseAuth.instance.currentUser?.updatePhotoURL(photoUrl);
-      return uploadTask.snapshot.ref.getDownloadURL();
-    } catch (e) {
-      alert(context, "Ocorreu um erro ao salvar o arquivo");
-    }
-  }
-
-  String? _validateFone(String? s) {
-    if(s == null) {
+  String? _validateFone(String? text) {
+    if (text!.isEmpty) {
       return "Digite seu telefone";
     }
     return null;
+  }
+
+  _validateNome(String? text) {
+    if (text!.isEmpty) {
+      return "Digite seu nome";
+    }
+    return null;
+  }
+
+  _validateNum(String? text) {
+    if (text!.isEmpty) {
+      return "Digite o número da sua casa";
+    }
+    return null;
+  }
+
+  _validateEndereco(String? text) {
+    if (text!.isEmpty) {
+      return "Digite o endereço da sua casa";
+    }
+    return null;
+  }
+
+  _onClickUpdate() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    User user = FirebaseAuth.instance.currentUser!;
+
+    Usuario usuario = Usuario(
+      dataNascimento: dataNascimento,
+      email: user.email,
+      id: user.uid,
+      nome: _tName.text,
+      endereco: _tEnd.text,
+      numeroCasa: _tNum.text,
+      telefone: _tFone.text,
+    );
+
+    ApiResponse updateResponse = await _bloc.updateProfile(usuario.toMap(), user.uid);
+
+    if(updateResponse.ok!) {
+      alert(context, "Dados atualizados com sucesso!", callback: () {
+        Navigator.pushReplacementNamed(context, '/');
+      });
+    } else {
+      alertCancel(context, "Não foi possível atualizar os dados, tente novamente!", callback: () {
+        _onClickUpdate();
+      });
+    }
+
+
   }
 }
