@@ -23,7 +23,6 @@ class PerfilPage extends StatefulWidget {
 }
 
 class _PerfilPageState extends State<PerfilPage> {
-
   final _bloc = PerfilBloc();
 
   final _tName = TextEditingController();
@@ -44,7 +43,7 @@ class _PerfilPageState extends State<PerfilPage> {
 
   final _formKey = GlobalKey<FormState>();
 
-  Timestamp dataNascimento = Timestamp.fromDate(DateTime.now());
+  Timestamp? dataNascimento = Timestamp.fromDate(DateTime.now());
 
   @override
   void initState() {
@@ -75,9 +74,21 @@ class _PerfilPageState extends State<PerfilPage> {
           print(usuario.numeroCasa);
           print(usuario.telefone);
           print(">>>>>>>>>>>>>>>>>>>>>> USUÁRIO <<<<<<<<<<<<<<<<<<<<<<<");
+
+          if (usuario.dataNascimento != null) {
+            dataNascimento = usuario.dataNascimento!;
+          } else {
+            dataNascimento = Timestamp.fromDate(DateTime.now());
+          }
         }
+      }).then((value) {
+        mySetState();
       });
     }
+  }
+
+  mySetState() {
+    setState(() {});
   }
 
   @override
@@ -176,12 +187,12 @@ class _PerfilPageState extends State<PerfilPage> {
                   controller: _tNum,
                   validator: (s) => _validateNum(s),
                 ),
-                const SizedBox(height: 8),
-                /*AppText(
+                /*const SizedBox(height: 8),
+                *//*AppText(
                   hint: "Data de Nascimento",
                   icon: Ionicons.calendar,
                   controller: _tData,
-                ),*/
+                ),*//*
 
                 const SizedBox(height: 16),
                 Container(
@@ -189,28 +200,30 @@ class _PerfilPageState extends State<PerfilPage> {
                     color: Colors.white,
                     borderRadius: BorderRadius.all(Radius.circular(20)),
                   ),
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 8.0),
-                  child: DateTimePicker(
-                    initialValue: dataNascimento.toDate().toString() ?? '',
-                    firstDate: DateTime(1980),
-                    lastDate: DateTime(2100),
-                    dateMask: 'dd/MM/yyyy',
-                    use24HourFormat: true,
-                    dateLabelText: 'Data',
-                    icon: const Icon(Ionicons.calendar),
-                    onChanged: (val) {
-                      print(val);
-                      dataNascimento = Timestamp.fromDate(DateTime.parse(val));
-                    },
-                    validator: (val) {
-                      print(val);
-                      return null;
-                    },
-                    onSaved: (val) => print(val),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8.0, vertical: 8.0),
+                    child: DateTimePicker(
+                      initialValue: dataNascimento!.toDate().toString(),
+                      firstDate: DateTime(1950),
+                      lastDate: DateTime(2100),
+                      dateMask: 'dd/MM/yyyy',
+                      use24HourFormat: true,
+                      dateLabelText: 'Data',
+                      icon: const Icon(Ionicons.calendar),
+                      onChanged: (val) {
+                        print(val);
+                        dataNascimento =
+                            Timestamp.fromDate(DateTime.parse(val));
+                      },
+                      validator: (val) {
+                        print(val);
+                        return null;
+                      },
+                      onSaved: (val) => print(val),
+                    ),
                   ),
-                ),
-                const SizedBox(height: 16),
+                ),*/
                 const SizedBox(height: 8),
                 /*AppText(
                   hint: "Telefone",
@@ -241,15 +254,14 @@ class _PerfilPageState extends State<PerfilPage> {
                 Container(
                   width: MediaQuery.of(context).size.width,
                   child: StreamBuilder<bool>(
-                    stream: _bloc.stream,
-                    initialData: false,
-                    builder: (context, snapshot) {
-                      return ButtonWidget(
-                        btnText: "Salvar",
-                        onClick: _onClickUpdate,
-                      );
-                    }
-                  ),
+                      stream: _bloc.stream,
+                      initialData: false,
+                      builder: (context, snapshot) {
+                        return ButtonWidget(
+                          btnText: "Salvar",
+                          onClick: _onClickUpdate,
+                        );
+                      }),
                 ),
               ],
             ),
@@ -295,7 +307,7 @@ class _PerfilPageState extends State<PerfilPage> {
     User user = FirebaseAuth.instance.currentUser!;
 
     Usuario usuario = Usuario(
-      dataNascimento: dataNascimento,
+      // dataNascimento: dataNascimento,
       email: user.email,
       id: user.uid,
       nome: _tName.text,
@@ -304,18 +316,19 @@ class _PerfilPageState extends State<PerfilPage> {
       telefone: _tFone.text,
     );
 
-    ApiResponse updateResponse = await _bloc.updateProfile(usuario.toMap(), user.uid);
+    ApiResponse updateResponse =
+        await _bloc.updateProfile(usuario.toMap(), user.uid);
 
-    if(updateResponse.ok!) {
+    if (updateResponse.ok!) {
       alert(context, "Dados atualizados com sucesso!", callback: () {
         Navigator.pushReplacementNamed(context, '/');
       });
     } else {
-      alertCancel(context, "Não foi possível atualizar os dados, tente novamente!", callback: () {
+      alertCancel(
+          context, "Não foi possível atualizar os dados, tente novamente!",
+          callback: () {
         _onClickUpdate();
       });
     }
-
-
   }
 }

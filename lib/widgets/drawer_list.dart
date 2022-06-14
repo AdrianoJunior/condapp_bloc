@@ -18,7 +18,7 @@ class DrawerList extends StatelessWidget {
         backgroundColor: Colors.white,
         backgroundImage: NetworkImage(
           user.photoURL ??
-          "https://firebasestorage.googleapis.com/v0/b/condapp-4d828.appspot.com/o/default_images%2Fdefault_image.png?alt=media&token=f252dfca-3e58-4c86-b33f-7c5d6115bd8d",
+              "https://firebasestorage.googleapis.com/v0/b/condapp-4d828.appspot.com/o/default_images%2Fdefault_image.png?alt=media&token=f252dfca-3e58-4c86-b33f-7c5d6115bd8d",
         ),
       ),
     );
@@ -148,8 +148,7 @@ class DrawerList extends StatelessWidget {
                   title: const Text("Logout"),
                   onTap: () async {
                     pop(context);
-                    await _onClickLogout();
-                    Navigator.pushReplacementNamed(context, '/login/');
+                    _onClickLogout(context);
                   },
                 ),
               ],
@@ -172,8 +171,8 @@ class DrawerList extends StatelessWidget {
                     alert(
                       context,
                       "Aplicativo CondApp\nVersão $version"
-                          "\n\nDesenvolvido por:\nAdriano Coutinho"
-                          "\nRenan Victal",
+                      "\n\nDesenvolvido por:\nAdriano Coutinho"
+                      "\nRenan Victal",
                     );
                   },
                 );
@@ -185,5 +184,9 @@ class DrawerList extends StatelessWidget {
     );
   }
 
-  Future<void> _onClickLogout() async {}
+  Future<void> _onClickLogout(context) async {
+    await FirebaseService().logout().then(
+          (value) => Navigator.pushReplacementNamed(context, '/login/'),
+        );
+  }
 }

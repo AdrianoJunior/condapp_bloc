@@ -36,7 +36,7 @@ class _VisitasEditPageState extends State<VisitasEditPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Nova visita"),
+        title: const Text("Editar visita"),
       ),
       body: _body(),
     );
@@ -72,8 +72,8 @@ class _VisitasEditPageState extends State<VisitasEditPage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                 child: DateTimePicker(
-                  initialValue: f.format(visita.dataVisita!.toDate()),
-                  firstDate: visita.dataVisita!.toDate() ?? DateTime.now(),
+                  initialValue: visita.dataVisita!.toDate().toString(),
+                  firstDate: DateTime(2022) ,
                   lastDate: DateTime(2100),
                   dateMask: 'dd/MM/yyyy',
                   use24HourFormat: true,
