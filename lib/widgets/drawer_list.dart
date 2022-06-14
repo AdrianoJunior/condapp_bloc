@@ -7,13 +7,13 @@ class DrawerList extends StatelessWidget {
       accountName: Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: Text(
-          user!.displayName ?? "Nome",
+          user!.email ?? "",
           style: const TextStyle(
             color: Colors.white,
           ),
         ),
       ),
-      accountEmail: Text(user.email ?? "E-mail"),
+      accountEmail: Text(""),
       currentAccountPicture: CircleAvatar(
         backgroundColor: Colors.white,
         backgroundImage: NetworkImage(
@@ -172,8 +172,8 @@ class DrawerList extends StatelessWidget {
                     alert(
                       context,
                       "Aplicativo CondApp\nVersão $version"
-                          "\n\nDesenvolvido por: Adriano Coutinho "
-                          "e Renan Victal",
+                          "\n\nDesenvolvido por:\nAdriano Coutinho"
+                          "\nRenan Victal",
                     );
                   },
                 );
