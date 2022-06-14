@@ -1,3 +1,4 @@
+import 'package:cond_app/pages/agenda/reservas/reservas_bloc.dart';
 import 'package:cond_app/utils/exports.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
@@ -5,8 +6,9 @@ import 'package:intl/intl.dart';
 class ReservasListView extends StatelessWidget {
   var reservas;
 
-  final f = DateFormat('dd/MM/yyyy - hh:mm');
+  final f = DateFormat('dd/MM/yyyy');
   final fData = DateFormat('dd/MM/yyyy');
+  final _bloc = ReservasBloc();
 
   ReservasListView({Key? key, required this.reservas}) : super(key: key);
 
@@ -32,7 +34,7 @@ class ReservasListView extends StatelessWidget {
                 children: [
                   SlidableAction(
                     onPressed: (_) {
-                      push(context, ReservasFormPage(reserva: r,));
+                      // push(context, ReservasFormPage());
                     },
                     icon: Icons.edit,
                     backgroundColor: Colors.green,
@@ -49,7 +51,9 @@ class ReservasListView extends StatelessWidget {
                         context,
                         "Deseja excluir a sua reserva de: ${r.local}, do dia ${fData.format(r.dataReserva!.toDate())}?"
                         "\nA ação não pode ser desfeita",
-                        callback: () {},
+                        callback: () {
+                          _bloc.deleteReserva(reserva: r);
+                        },
                       );
                     },
                     icon: Icons.delete_forever,

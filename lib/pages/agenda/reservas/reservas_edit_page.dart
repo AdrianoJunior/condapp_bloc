@@ -1,45 +1,46 @@
 import 'package:cond_app/utils/exports.dart';
 import 'package:intl/intl.dart';
 
-import 'reservas_bloc.dart';
+class ReservasEditPage extends StatefulWidget {
+  final Reserva reserva;
 
-class ReservasFormPage extends StatefulWidget {
+  ReservasEditPage({required this.reserva});
+
   @override
-  _ReservasFormPageState createState() => _ReservasFormPageState();
+  _ReservasEditPageState createState() => _ReservasEditPageState();
 }
 
-class _ReservasFormPageState extends State<ReservasFormPage> {
+class _ReservasEditPageState extends State<ReservasEditPage> {
   @override
   void initState() {
     super.initState();
 
     Intl.defaultLocale = 'pt_BR';
 
-    _controller3 = TextEditingController(text: DateTime.now().toString());
+    _controller3 = TextEditingController(text: reserva.dataReserva!.toDate().toString());
   }
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final _bloc = ReservasBloc();
+  Reserva get reserva => widget.reserva;
 
   int _radioIndex = 0;
 
   var _showProgress = false;
 
   String _valueChanged3 = '';
-  String _valueToValidate3 = '';
-  String _valueSaved3 = '';
+
+  late TextEditingController _controller3;
 
   late Timestamp dataReserva;
 
-  late TextEditingController _controller3;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Nova reserva",
+          reserva != null ? "Editar reserva" : "Nova reserva",
         ),
       ),
       body: Container(
@@ -71,11 +72,23 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
             thickness: 2,
           ),
           const SizedBox(height: 16),
-          /*const Text(
+          const Text(
             "Data",
             style: TextStyle(
               color: Colors.blue,
               fontSize: 20,
+            ),
+          ),
+          /*DateTimePicker(
+            firstDate: DateTime.now(),
+            type: DateTimePickerType.date,
+            lastDate: DateTime.utc(2022),
+            // locale: const Locale('pt', 'BR'),
+            initialDate: DateTime.now(),
+            timePickerEntryModeInput: false,
+            dateMask: "dd/MM/yyyy",
+            icon: Icon(
+              Ionicons.md_calendar,
             ),
           ),*/
           const Divider(
@@ -88,22 +101,29 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
             //initialValue: _initialValue,
             firstDate: DateTime(2000),
             lastDate: DateTime(2100),
-            icon: const Icon(
+            icon: Icon(
               Ionicons.md_calendar,
             ),
-            dateLabelText: 'Data',
-            locale: const Locale('pt', 'BR'),
+            dateLabelText: 'Date',
+            locale: Locale('pt', 'BR'),
             onChanged: (val) async {
               setState(() => _valueChanged3 = val);
-              DateTime data = DateTime.parse(_valueChanged3);
+              DateTime dataTeste = DateTime.parse(_valueChanged3);
 
-              dataReserva = Timestamp.fromDate(data);
+              print("DATA >>>>>>>> ${dataTeste.toLocal()} <<<<<<<<<");
+
+              FirebaseFirestore.instance
+                  .collection('teste')
+                  .doc('testeData')
+                  .set({
+                "data": Timestamp.fromDate(dataTeste),
+              }).then((value) => alert(context, "Dados salvos com sucesso."));
             },
             validator: (val) {
-              setState(() => _valueToValidate3 = val ?? '');
+              setState(() =>  '');
               return null;
             },
-            onSaved: (val) => setState(() => _valueSaved3 = val ?? ''),
+            onSaved: (val) => setState(() =>  ''),
           ),
           const Divider(
             thickness: 2,
@@ -216,10 +236,10 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
     }
 
     // Cria a reserva
-    var r = Reserva();
+    var r = reserva ?? Reserva();
     r.local = _getLocal();
-    r.dataReserva = dataReserva;
-    r.idMorador = FirebaseAuth.instance.currentUser!.uid;
+    // r.dataReserva = tDesc.text;
+    // r.tipo = _getTipo();
 
     print("Reserva: ${r.toString()}");
 
@@ -227,23 +247,25 @@ class _ReservasFormPageState extends State<ReservasFormPage> {
       _showProgress = true;
     });
 
-    ApiResponse reservaResponse = await _bloc.addReserva(reserva: r);
+    await Future.delayed(Duration(seconds: 5));
+/*
+    print("Salvar o carro $r");
 
-    if (reservaResponse.ok!) {
-      alert(context, "Reserva criada com sucesso!", callback: () {
-        setState(() {
-          _showProgress = false;
-        });
+    ApiResponse<bool> response = await CarrosApi.save(r, _file);
+
+    if (response.ok) {
+      alert(context, "Carro salvo com sucesso", callback: () {
+        EventBus.get(context).sendEvent(CarroEvent("carro_salvo", r.tipo));
+
         pop(context);
       });
     } else {
-      alert(context, "Não foi possível salvar a reserva.\nTente novamente!",
-          callback: () {
-        setState(() {
-          _showProgress = false;
-        });
-      });
-    }
+      alert(context, response.msg);
+    }*/
+
+    setState(() {
+      _showProgress = false;
+    });
 
     print("Fim.");
   }
