@@ -5,6 +5,8 @@ import 'package:cond_app/utils/exports.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 
+import 'visitas_edit_page.dart';
+
 class VisitasListView extends StatelessWidget {
   var visitas;
   final _bloc = VisitasBloc();
@@ -39,7 +41,7 @@ class VisitasListView extends StatelessWidget {
                     icon: Icons.edit,
                     backgroundColor: Colors.green,
                     onPressed: (_) {
-                      push(context, VisitasFormPage(visita: v));
+                      push(context, VisitasEditPage(visita: v));
                     },
                     label: 'Editar',
                   ),

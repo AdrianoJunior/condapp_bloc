@@ -4,18 +4,21 @@ import 'package:cond_app/utils/exports.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class VisitasFormPage extends StatefulWidget {
+class VisitasEditPage extends StatefulWidget {
+  Visita visita;
 
-  VisitasFormPage({Key? key}) : super(key: key);
+
+  VisitasEditPage({Key? key, required this.visita}) : super(key: key);
 
   @override
-  _VisitasFormPageState createState() => _VisitasFormPageState();
+  _VisitasEditPageState createState() => _VisitasEditPageState();
 }
 
-class _VisitasFormPageState extends State<VisitasFormPage> {
+class _VisitasEditPageState extends State<VisitasEditPage> {
   final _formKey = GlobalKey<FormState>();
 
   Timestamp? timestampVisita;
+  Visita get visita => widget.visita;
   final _bloc = VisitasBloc();
   final _tVisitante = TextEditingController();
   final _tRGVisitante = TextEditingController();
@@ -25,6 +28,8 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
   void initState() {
     super.initState();
 
+    _tVisitante.text = visita.nomeVisitante!;
+    _tRGVisitante.text = visita.RGVisitante!;
   }
 
   @override
@@ -67,8 +72,8 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
                 child: DateTimePicker(
-                  initialValue: '',
-                  firstDate: DateTime.now(),
+                  initialValue: f.format(visita.dataVisita!.toDate()),
+                  firstDate: visita.dataVisita!.toDate() ?? DateTime.now(),
                   lastDate: DateTime(2100),
                   dateMask: 'dd/MM/yyyy',
                   use24HourFormat: true,
@@ -77,6 +82,8 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
                   onChanged: (val) {
                     print(val);
                     timestampVisita = Timestamp.fromDate(DateTime.parse(val));
+                    visita.dataVisita =
+                        Timestamp.fromDate(DateTime.parse(val));
                   },
                   validator: (val) {
                     print(val);
@@ -89,7 +96,7 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
             const SizedBox(height: 16),
             ButtonWidget(
               btnText: "Confirmar",
-              onClick: _onClickSalvar,
+              onClick: () => _onClickSalvar(visita),
             ),
           ],
         ),
@@ -97,7 +104,7 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
     );
   }
 
-  _onClickSalvar() async {
+  _onClickSalvar(Visita? visita) async {
     if (!_formKey.currentState!.validate()) {
       return;
     }
@@ -105,17 +112,20 @@ class _VisitasFormPageState extends State<VisitasFormPage> {
     String nomeVisitante = _tVisitante.text;
     String docVisitante = _tRGVisitante.text;
 
-    Visita v = Visita(dataVisita: timestampVisita, nomeVisitante: nomeVisitante, RGVisitante: docVisitante);
+    Visita v = visita ?? Visita(dataVisita: timestampVisita, nomeVisitante: nomeVisitante, RGVisitante: docVisitante);
 
     ApiResponse visitaResponse;
-      visitaResponse = await _bloc.addVisita(
+
+
+      visitaResponse = await _bloc.updateVisita(
           visita: v, uid: FirebaseAuth.instance.currentUser!.uid);
 
       if (visitaResponse.ok!) {
-        alert(context, 'Visita agendada com sucesso!', callback: pop(context));
+        alert(context, 'Visita atualizada com sucesso!', callback: pop(context));
       } else {
         alert(context, visitaResponse.msg!);
       }
+
     }
 
   _validateName(String? text) {
